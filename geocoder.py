@@ -21,12 +21,15 @@ abbr = {'Avenue': 'Ave', 'Boulevard': 'Blvd', 'Circle': 'Cir', 'Court': 'Ct', 'D
 # find and return all roadnames that match test_string in the database.
 def find_in_database(test_string):
 	# Configuration settings may vary from server to server:
-	connection_string = "dbname=HEROKU_POSTGRESQL_ONYX_URL"
+	username = os.environ["DATABASE_URL"].split(":")[1].replace("//","")
+	password = os.environ["DATABASE_URL"].split(":")[2].split("@")[0]
+	host = os.environ["DATABASE_URL"].split(":")[2].split("@")[1].split("/")[0]
+	dbname = os.environ["DATABASE_URL"].split(":")[2].split("@")[1].split("/")[1] 
+	conn = psycopg2.connect(dbname=dbname, user=username, password=password, host=host) 
 	
 	# print the connection string we will use to connect
 	#print "Connecting to database\n	->%s" % (connection_string)
 
-	conn = psycopg2.connect(connection_string)
 	cursor = conn.cursor()
 	#print "Connected!\n"
 
