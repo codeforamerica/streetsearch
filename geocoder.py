@@ -30,11 +30,17 @@ def find_in_database(test_string):
 	print "database name: " + dbname
 	conn = psycopg2.connect(dbname=dbname, user=username, password=password, host=host) 
 
+
 	# print the connection string we will use to connect
 	#print "Connecting to database\n	->%s" % (connection_string)
 
 	cursor = conn.cursor()
-	#print "Connected!\n"
+	print "Connected!\n"
+
+	queryd = "SELECT * FROM mesaroads limit 1;"
+	cursor.execute(queryd)
+	records = cursor.fetchall()
+	print records
 
 	# Always use this query: 
 	query = "SELECT fullname, ST_ASGeoJSON(geom) FROM mesaroads WHERE fullname ~ '" + test_string + "'"
