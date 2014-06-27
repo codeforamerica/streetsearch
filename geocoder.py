@@ -26,10 +26,10 @@ def find_in_database(test_string):
 	username = os.environ["DATABASE_URL"].split(":")[1].replace("//","")
 	password = os.environ["DATABASE_URL"].split(":")[2].split("@")[0]
 	host = os.environ["DATABASE_URL"].split(":")[2].split("@")[1].split("/")[0]
-	dbname = os.environ["DATABASE_URL"].split(":")[2].split("@")[1].split("/")[1] 
+	port = os.environ["DATABASE_URL"].split(":")[3].split("/")[1]
+	dbport = os.environ["DATABASE_URL"].split(":")[3].split("/")[0]
 	print "database name: " + dbname
-	conn = psycopg2.connect(dbname=dbname, user=username, password=password, host=host) 
-
+	conn = psycopg2.connect(dbname=dbname, user=username, password=password, host=host,port=dbport) 
 
 	# print the connection string we will use to connect
 	#print "Connecting to database\n	->%s" % (connection_string)
