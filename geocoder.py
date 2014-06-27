@@ -29,6 +29,7 @@ def find_in_database(test_string):
 	host = os.environ["DATABASE_URL"].split(":")[2].split("@")[1].split("/")[0]
 	print host
 	dbname = os.environ["DATABASE_URL"].split(":")[2].split("@")[1].split("/")[1] 
+	print "database name:"
 	print dbname
 	conn = psycopg2.connect(dbname=dbname, user=username, password=password, host=host) 
 
