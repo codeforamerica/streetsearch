@@ -10,9 +10,7 @@ def hello():
 	if request.method=='GET':
 		return "hello"
 	if request.method=='POST':
-		# sentence = request.form['fileupload']
-		# #.translate(string.maketrans("",""), string.punctuation).split()
-		# return jsonify(text=geocode_text(sentence))
-		return "hello"
+		 sentence = request.form['fileupload']
+		 return jsonify(text=geocode_text(sentence))
 if __name__ == "__main__":
     app.run()
