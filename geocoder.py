@@ -62,15 +62,16 @@ def seek_backwards(text, fragment, index, matches):
 	print fragment
 	if index == 0:
 		return matches
-
+	print index
 	prev_index = index - 1
 
 	this_word = text[prev_index]
+	print this_word
 	if this_word in prefix.keys():
 		this_word = prefix[this_word]
 
 	test_string = this_word + ' ' + fragment 
-
+	print test_string
 	# get locations = matches for p + suffix in roads database/name column
 	new_matches = find_in_database(test_string)
 	print new_matches
@@ -115,6 +116,7 @@ def geocode_text(sentence):
 		if word in suffixes:
 			print "seeking backwards from " + word + " at index: " + str(i)
 			these_matches = seek_backwards(sentence, word, i, [])
+			print these_matches
 			if these_matches:
 				all_matches += these_matches
 	return all_matches
