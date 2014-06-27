@@ -118,6 +118,7 @@ def geocode_text(sentence):
 			if these_matches:
 				all_matches += these_matches
 	return all_matches
+	print all_matches
 # now do something with all_matches.
 
 # cur.execute("SELECT PREDIRABRV as prefix,NAME as name,SUFDIRABRV as suffix, geom FROM featnames LEFT OUTER JOIN roads ON (featnames.TLID = roads.TLID) WHERE name IS NOT NULL;")
