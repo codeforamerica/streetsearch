@@ -23,16 +23,10 @@ abbr = {'Avenue': 'Ave', 'Boulevard': 'Blvd', 'Circle': 'Cir', 'Court': 'Ct', 'D
 def find_in_database(test_string):
 	# Configuration settings may vary from server to server:
 	username = os.environ["DATABASE_URL"].split(":")[1].replace("//","")
-	print username
 	password = os.environ["DATABASE_URL"].split(":")[2].split("@")[0]
-	print "password:"
-	print password
 	host = os.environ["DATABASE_URL"].split(":")[2].split("@")[1].split("/")[0]
-	print "host name:"
-	print host
 	dbname = os.environ["DATABASE_URL"].split(":")[2].split("@")[1].split("/")[1] 
-	print "database name:"
-	print dbname
+	print "database name: " + dbname
 	conn = psycopg2.connect(dbname=dbname, user=username, password=password, host=host) 
 
 	# print the connection string we will use to connect
