@@ -22,6 +22,7 @@ abbr = {'Avenue': 'Ave', 'Boulevard': 'Blvd', 'Circle': 'Cir', 'Court': 'Ct', 'D
 # find and return all roadnames that match test_string in the database.
 def find_in_database(test_string):
 	# Configuration settings may vary from server to server:
+	print os.environ["DATABASE_URL"]
 	username = os.environ["DATABASE_URL"].split(":")[1].replace("//","")
 	password = os.environ["DATABASE_URL"].split(":")[2].split("@")[0]
 	host = os.environ["DATABASE_URL"].split(":")[2].split("@")[1].split("/")[0]
