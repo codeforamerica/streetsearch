@@ -74,6 +74,7 @@ def seek_backwards(text, fragment, index, matches):
 	print test_string
 	# get locations = matches for p + suffix in roads database/name column
 	new_matches = find_in_database(test_string)
+	print "matches" 
 	print new_matches
 	if len(new_matches) == 0:
 		return matches # stick w/ old results
