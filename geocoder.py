@@ -25,8 +25,10 @@ def find_in_database(test_string):
 	username = os.environ["DATABASE_URL"].split(":")[1].replace("//","")
 	print username
 	password = os.environ["DATABASE_URL"].split(":")[2].split("@")[0]
+	print "password:"
 	print password
 	host = os.environ["DATABASE_URL"].split(":")[2].split("@")[1].split("/")[0]
+	print "host name:"
 	print host
 	dbname = os.environ["DATABASE_URL"].split(":")[2].split("@")[1].split("/")[1] 
 	print "database name:"
