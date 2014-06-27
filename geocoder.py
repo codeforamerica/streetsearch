@@ -21,7 +21,7 @@ abbr = {'Avenue': 'Ave', 'Boulevard': 'Blvd', 'Circle': 'Cir', 'Court': 'Ct', 'D
 # find and return all roadnames that match test_string in the database.
 def find_in_database(test_string):
 	# Configuration settings may vary from server to server:
-	connection_string = "dbname=tiger"
+	connection_string = "dbname=HEROKU_POSTGRESQL_ONYX_URL"
 	
 	# print the connection string we will use to connect
 	#print "Connecting to database\n	->%s" % (connection_string)
