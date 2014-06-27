@@ -10,9 +10,9 @@ import string
 
 pp = pprint.PrettyPrinter(indent=4)
 
-sentence = open('council_example_text', 'r').readline().translate(string.maketrans("",""), string.punctuation).split()
+# sentence = open('council_example_text', 'r').readline().translate(string.maketrans("",""), string.punctuation).split()
+
 suffixes = 'Ave Blvd Cir Ct Dr Ln Pl Rd St Way'.split()
-print sentence
 
 prefix = {'North':'N','South':'S','East':'E','West':'W'}
 abbr = {'Avenue': 'Ave', 'Boulevard': 'Blvd', 'Circle': 'Cir', 'Court': 'Ct', 'Drive': 'Dr', 'Lane':'Ln', 'Place': 'Pl','Road':'Rd','Street':'St','Way':'Way'}
@@ -31,7 +31,7 @@ def find_in_database(test_string):
 	#print "Connected!\n"
 
 	# Always use this query: 
-	query = "SELECT fullname FROM roadlengths WHERE fullname ~ '" + test_string + "'"
+	query = "SELECT fullname, ST_ASGeoJSON(geom) FROM roadlengths WHERE fullname ~ '" + test_string + "'"
 	cursor.execute(query);
 
 	# retrieve the records from the database
@@ -39,8 +39,6 @@ def find_in_database(test_string):
  
 	# print out the records using pretty print
 	#print "test string: " + test_string
-	#pprint.pprint(records)
-
 	cursor.close()
 	conn.close()
 
@@ -83,9 +81,6 @@ def seek_backwards(text, fragment, index, matches):
 	else:
 		return seek_backwards(text, test_string, prev_index, new_matches) 
 
-
-
-
 # until end of sentence: 
 
 	# get word
@@ -108,23 +103,22 @@ def seek_backwards(text, fragment, index, matches):
 	# 	elsif locations2.length > 1
 
 # matches will be all the sentence fragments ("Alma School Rd", "295 8th Street") which match TIGER-based locations
-all_matches = [] 
-for i, word in enumerate(sentence):
-	if word in abbr.keys():
-		word = abbr[word]
-		#print word
-	if word in suffixes:
-		print "seeking backwards from " + word + " at index: " + str(i)
-		these_matches = seek_backwards(sentence, word, i, [])
-		if these_matches:
-			all_matches += these_matches
+def geocode_text(sentence):
+	sentence = sentence.encode('utf8')
+	sentence = sentence.translate(string.maketrans("",""), string.punctuation).split()
 
+	all_matches = []
+	for i, word in enumerate(sentence):
+		if word in abbr.keys():
+			word = abbr[word]
+			#print word
+		if word in suffixes:
+			print "seeking backwards from " + word + " at index: " + str(i)
+			these_matches = seek_backwards(sentence, word, i, [])
+			if these_matches:
+				all_matches += these_matches
+	return all_matches
 # now do something with all_matches.
-pp.pprint(all_matches)
-
-	
-
-
 
 # cur.execute("SELECT PREDIRABRV as prefix,NAME as name,SUFDIRABRV as suffix, geom FROM featnames LEFT OUTER JOIN roads ON (featnames.TLID = roads.TLID) WHERE name IS NOT NULL;")
 
