@@ -1,17 +1,22 @@
-# from nltk.util import ngrams
 import psycopg2
 import pprint
 import string
 import os
+import logging
+from pygeocoder import Geocoder
+from geojson import Point
 
 # success is returning:
 # West Jerome Avenue
 # Country Club Drive
 # Baseline Road
 
-pp = pprint.PrettyPrinter(indent=4)
+logging.basicConfig(level=logging.DEBUG)
+logger = logging.getLogger(__name__)
 
-# sentence = open('council_example_text', 'r').readline().translate(string.maketrans("",""), string.punctuation).split()
+is_production = False
+
+pp = pprint.PrettyPrinter(indent=4)
 
 suffixes = 'Ave Blvd Cir Ct Dr Ln Pl Rd St Way'.split()
 
@@ -20,46 +25,53 @@ abbr = {'Avenue': 'Ave', 'Boulevard': 'Blvd', 'Circle': 'Cir', 'Court': 'Ct', 'D
 
 # TODO - also look for addresses (numbers)
 # find and return all roadnames that match test_string in the database.
+# test_string: a string containing natural language and potentially some addresses
 def find_in_database(test_string):
-	# Configuration settings may vary from server to server:
-	print os.environ["DATABASE_URL"]
-	username = os.environ["DATABASE_URL"].split(":")[1].replace("//","")
-	password = os.environ["DATABASE_URL"].split(":")[2].split("@")[0]
-	host = os.environ["DATABASE_URL"].split(":")[2].split("@")[1].split("/")[0]
-	dbname = os.environ["DATABASE_URL"].split(":")[3].split("/")[1]
-	dbport = os.environ["DATABASE_URL"].split(":")[3].split("/")[0]
-	print "database name: " + dbname
-	conn = psycopg2.connect(dbname=dbname, user=username, password=password, host=host,port=dbport) 
-
 	# print the connection string we will use to connect
 	#print "Connecting to database\n	->%s" % (connection_string)
 
-	cursor = conn.cursor()
-	print "Connected!\n"
+	global is_production
+	if is_production:
+		# Configuration settings may vary from server to server:
+		logger.info(os.environ["DATABASE_URL"])
+		username = os.environ["DATABASE_URL"].split(":")[1].replace("//","")
+		password = os.environ["DATABASE_URL"].split(":")[2].split("@")[0]
+		host = os.environ["DATABASE_URL"].split(":")[2].split("@")[1].split("/")[0]
+		dbname = os.environ["DATABASE_URL"].split(":")[3].split("/")[1]
+		dbport = os.environ["DATABASE_URL"].split(":")[3].split("/")[0]
+		logger.info("database name: " + dbname)
+		db_conn = psycopg2.connect(dbname=dbname, user=username, password=password, host=host,port=dbport)
+	else:
+		db_conn = psycopg2.connect(dbname='tiger', host='localhost', port='5432')
+
+
+	cursor = db_conn.cursor()
+	logger.debug("Connected!\n")
 
 	queryd = "SELECT * FROM mesaroads limit 1;"
 	cursor.execute(queryd)
 	records = cursor.fetchall()
-	print records
+	logger.debug(records)
 
-	# Always use this query: 
+	# Always use this query:
 	query = "SELECT fullname, ST_ASGeoJSON(geom) FROM mesaroads WHERE fullname ~ '" + test_string + "'"
 	cursor.execute(query);
 
 	# retrieve the records from the database
 	records = cursor.fetchall()
- 
-	# print out the records using pretty print
-	#print "test string: " + test_string
 	cursor.close()
-	conn.close()
+	db_conn.close()
 
 	return records
 
 
-# seek_backwards("long ass text here and s alma school rd", 'rd', 8, [])
-# seek_backwards("long ass text here and s Alma School rd", 's alma school rd', 5, ['s alma school rd'])
-
+def is_number(num_or_not):
+	try:
+	    int(num_or_not)
+	except ValueError:
+	    return False
+	else:
+	    return True
 
 # seek backwards in sentence from the tail that begins at index i
 # returns a list of 0 or more locations.
@@ -71,31 +83,48 @@ def find_in_database(test_string):
 # index: the index of the fragment within text
 # matches: list of matches we already found that we'd like to refine
 def seek_backwards(text, fragment, index, matches):
-	print fragment
+	logger.debug('text | fragment | index | matches %s | %s | %s | %s' % (text,fragment,index,matches))
 	if index == 0:
 		return matches
-	print index
 	prev_index = index - 1
 
 	this_word = text[prev_index]
-	print this_word
+	logger.debug(this_word)
 	if this_word in prefix.keys():
 		this_word = prefix[this_word]
 
-	test_string = this_word + ' ' + fragment 
-	print test_string
+	test_string = this_word + ' ' + fragment
+	logger.debug(test_string)
 	# get locations = matches for p + suffix in roads database/name column
 	new_matches = find_in_database(test_string)
-	print "matches" 
-	print new_matches
+	logger.debug("testing %s resulted in new matches:" % test_string)
+	logger.debug(new_matches)
 	if len(new_matches) == 0:
+		logger.debug("no new matches based on '%s', returning former matches" % this_word)
 		return matches # stick w/ old results
 	elif len(new_matches) == 1:
+		if prev_index > 0: # start looking for address to geocode
+			maybe_address_number = text[prev_index-1]
+			if is_number(maybe_address_number):
+				maybe_address = maybe_address_number + ' ' + test_string
+				logger.debug('Address to Geocode (TODO): %s' % maybe_address)
+				results = Geocoder.geocode(maybe_address + ' Mesa, AZ')
+				logger.debug('Geocoder returned this location:')
+				logger.debug(results[0].coordinates)
+
+				if len(results) > 0:
+					geocoded_match = (maybe_address, Point(results[0].coordinates))
+					logger.debug(geocoded_match)
+					logger.debug("Found specific geocoded match; returning it")
+					return [geocoded_match]
+
+		logger.debug("down to 1 line match for '%s', returning match\n\n" % test_string)
+
 		return new_matches
 	else:
-		return seek_backwards(text, test_string, prev_index, new_matches) 
+		return seek_backwards(text, test_string, prev_index, new_matches)
 
-# until end of sentence: 
+# until end of sentence:
 
 	# get word
 	# does suffixes contain word?
@@ -117,13 +146,23 @@ def seek_backwards(text, fragment, index, matches):
 	# 	elsif locations2.length > 1
 
 # matches will be all the sentence fragments ("Alma School Rd", "295 8th Street") which match TIGER-based locations
-def geocode_text(sentence):
+def geocode_text(production, sentence):
+	global is_production
+	is_production = production
+
+	if production:
+		logger.setLevel(logging.INFO)
+	else:
+		logger.setLevel(logging.DEBUG)
+
+
+
 	sentence = sentence.encode('utf8')
-	sentence = sentence.translate(string.maketrans("",""), string.punctuation).split()
+	sentence = sentence.translate(string.maketrans("",""), string.punctuation).split() #strip punctuation
 
 	all_matches = []
 	for i, word in enumerate(sentence):
-		if word in abbr.keys():
+		if word in abbr.keys(): # Abbrieviate all road types (e.g. Road -> Rd) to match our little list of suffixes
 			word = abbr[word]
 			#print word
 		if word in suffixes:
@@ -133,61 +172,5 @@ def geocode_text(sentence):
 			if these_matches:
 				all_matches += these_matches
 	return all_matches
-	print all_matches
+	logger.info(all_matches)
 # now do something with all_matches.
-
-# cur.execute("SELECT PREDIRABRV as prefix,NAME as name,SUFDIRABRV as suffix, geom FROM featnames LEFT OUTER JOIN roads ON (featnames.TLID = roads.TLID) WHERE name IS NOT NULL;")
-
-# matches = [s for s in cur.fetchall() if (in_twogram(possibilities_2, s[1]) or in_threegram(possibilities_3, s[1])] 
-# print "found:"
-# print matches
-# print sentence
-
-# cur.close()
-# conn.close()
-
-# # Given a street name, return the gram(s) that matches (if exists)
-# #NEED TO ADD && 
-# def in_twogram(grams, name):
-# 	return [g for g in grams if g[0] == name]
-
-# def in_threegram(grams, name):
-# 	return [g for g in grams if g[1] == name]
-
-# n = 2
-# twograms = ngrams(sentence.split(), n)
-# possibilities_2 = [x for x in twograms if x[1]=="Street."]
-# print possibilities_2
-
-# n = 3
-# threegrams = ngrams(sentence.split(), n)
-# possibilities_3 = [x for x in threegrams if x[2]=="Street."]
-# print possibilities_3
-
-# streets = [['W','8th','St', '123458918292'],['W','68th','St', '8932891982832']]
-
-# conn = psycopg2.connect("dbname=tiger")
-
-# cur = conn.cursor()
-
-# cur.execute("SELECT PREDIRABRV as prefix,NAME as name,SUFDIRABRV as suffix, geom FROM featnames LEFT OUTER JOIN roads ON (featnames.TLID = roads.TLID) WHERE name IS NOT NULL;")
-
-# matches = [s for s in cur.fetchall() if (in_twogram(possibilities_2, s[1]) or in_threegram(possibilities_3, s[1])] 
-# print "found:"
-# print matches
-# print sentence
-
-# cur.close()
-# conn.close()
-
-
-# #searches all the grams for each street name- 
-# #if within the gram there is a match for any one word 
-# #or two words, then match--grams are limited to those 
-# #ending in street, drive, or any other suffix. then limit on prefix. 
-
-# #gram size for road names (road name length in words, and frequency of those)
-# #WITH gramsize AS (SELECT name, array_length(regexp_split_to_array(name,'\s'),1) as wordcount FROM featnames) SELECT COUNT(distinct(name)), wordcount from gramsize group by wordcount ORDER BY wordcount DESC;
-
-
-
