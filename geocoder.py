@@ -8,6 +8,8 @@ import os
 # Country Club Drive
 # Baseline Road
 
+is_production = False
+
 pp = pprint.PrettyPrinter(indent=4)
 
 suffixes = 'Ave Blvd Cir Ct Dr Ln Pl Rd St Way'.split()
@@ -17,21 +19,27 @@ abbr = {'Avenue': 'Ave', 'Boulevard': 'Blvd', 'Circle': 'Cir', 'Court': 'Ct', 'D
 
 # TODO - also look for addresses (numbers)
 # find and return all roadnames that match test_string in the database.
+# test_string: a string containing natural language and potentially some addresses
 def find_in_database(test_string):
-	# Configuration settings may vary from server to server:
-	print os.environ["DATABASE_URL"]
-	username = os.environ["DATABASE_URL"].split(":")[1].replace("//","")
-	password = os.environ["DATABASE_URL"].split(":")[2].split("@")[0]
-	host = os.environ["DATABASE_URL"].split(":")[2].split("@")[1].split("/")[0]
-	dbname = os.environ["DATABASE_URL"].split(":")[3].split("/")[1]
-	dbport = os.environ["DATABASE_URL"].split(":")[3].split("/")[0]
-	print "database name: " + dbname
-	conn = psycopg2.connect(dbname=dbname, user=username, password=password, host=host,port=dbport) 
-
 	# print the connection string we will use to connect
 	#print "Connecting to database\n	->%s" % (connection_string)
 
-	cursor = conn.cursor()
+	global is_production
+	if is_production:
+		# Configuration settings may vary from server to server:
+		print os.environ["DATABASE_URL"]
+		username = os.environ["DATABASE_URL"].split(":")[1].replace("//","")
+		password = os.environ["DATABASE_URL"].split(":")[2].split("@")[0]
+		host = os.environ["DATABASE_URL"].split(":")[2].split("@")[1].split("/")[0]
+		dbname = os.environ["DATABASE_URL"].split(":")[3].split("/")[1]
+		dbport = os.environ["DATABASE_URL"].split(":")[3].split("/")[0]
+		print "database name: " + dbname
+		db_conn = psycopg2.connect(dbname=dbname, user=username, password=password, host=host,port=dbport)
+	else:
+		db_conn = psycopg2.connect(dbname='tiger', host='localhost', port='5432')
+
+
+	cursor = db_conn.cursor()
 	print "Connected!\n"
 
 	queryd = "SELECT * FROM mesaroads limit 1;"
@@ -45,9 +53,8 @@ def find_in_database(test_string):
 
 	# retrieve the records from the database
 	records = cursor.fetchall()
-
 	cursor.close()
-	conn.close()
+	db_conn.close()
 
 	return records
 
@@ -108,7 +115,9 @@ def seek_backwards(text, fragment, index, matches):
 	# 	elsif locations2.length > 1
 
 # matches will be all the sentence fragments ("Alma School Rd", "295 8th Street") which match TIGER-based locations
-def geocode_text(sentence):
+def geocode_text(production, sentence):
+	global is_production
+	is_production = production
 	sentence = sentence.encode('utf8')
 	sentence = sentence.translate(string.maketrans("",""), string.punctuation).split()
 
