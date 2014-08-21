@@ -1,6 +1,6 @@
 #get maricopa county roads from us census:
-# wget ftp://ftp2.census.gov/geo/tiger/TIGER2013/EDGES/tl_2013_04013_edges.zip
-# unzip tl_2013_04013_edges.zip
+wget ftp://ftp2.census.gov/geo/tiger/TIGER2013/EDGES/tl_2013_04013_edges.zip
+unzip tl_2013_04013_edges.zip
 
 export SHAPE_ENCODING="ISO-8859-1"
 ogr2ogr tl_2013_04013_edges2.shp tl_2013_04013_edges.shp -lco ENCODING=UTF-8
