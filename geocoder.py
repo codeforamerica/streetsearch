@@ -3,6 +3,8 @@ import pprint
 import string
 import os
 import logging
+from pygeocoder import Geocoder
+from geojson import Point
 
 # success is returning:
 # West Jerome Avenue
@@ -63,6 +65,14 @@ def find_in_database(test_string):
 	return records
 
 
+def is_number(num_or_not):
+	try:
+	    int(num_or_not)
+	except ValueError:
+	    return False
+	else:
+	    return True
+
 # seek backwards in sentence from the tail that begins at index i
 # returns a list of 0 or more locations.
 # the locations are based on the fragment at the given index in the text, and
@@ -87,14 +97,32 @@ def seek_backwards(text, fragment, index, matches):
 	logger.debug(test_string)
 	# get locations = matches for p + suffix in roads database/name column
 	new_matches = find_in_database(test_string)
-	print "matches"
-	print new_matches
+	logger.debug("testing %s resulted in new matches:" % test_string)
+	logger.debug(new_matches)
 	if len(new_matches) == 0:
+		logger.debug("no new matches based on '%s', returning former matches" % this_word)
 		return matches # stick w/ old results
 	elif len(new_matches) == 1:
+		if prev_index > 0: # start looking for address to geocode
+			maybe_address_number = text[prev_index-1]
+			if is_number(maybe_address_number):
+				maybe_address = maybe_address_number + ' ' + test_string
+				logger.debug('Address to Geocode (TODO): %s' % maybe_address)
+				results = Geocoder.geocode(maybe_address + ' Mesa, AZ')
+				logger.debug('Geocoder returned this location:')
+				logger.debug(results[0].coordinates)
+
+				if len(results) > 0:
+					geocoded_match = (maybe_address, Point(results[0].coordinates))
+					logger.debug(geocoded_match)
+					logger.debug("Found specific geocoded match; returning it")
+					return [geocoded_match]
+
+		logger.debug("down to 1 line match for '%s', returning match\n\n" % test_string)
+
 		return new_matches
 	else:
-		return seek_backwards(text, test_string, prev_index, new_matches) 
+		return seek_backwards(text, test_string, prev_index, new_matches)
 
 # until end of sentence:
 
