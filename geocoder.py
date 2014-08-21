@@ -2,11 +2,15 @@ import psycopg2
 import pprint
 import string
 import os
+import logging
 
 # success is returning:
 # West Jerome Avenue
 # Country Club Drive
 # Baseline Road
+
+logging.basicConfig(level=logging.DEBUG)
+logger = logging.getLogger(__name__)
 
 is_production = False
 
@@ -27,25 +31,25 @@ def find_in_database(test_string):
 	global is_production
 	if is_production:
 		# Configuration settings may vary from server to server:
-		print os.environ["DATABASE_URL"]
+		logger.info(os.environ["DATABASE_URL"])
 		username = os.environ["DATABASE_URL"].split(":")[1].replace("//","")
 		password = os.environ["DATABASE_URL"].split(":")[2].split("@")[0]
 		host = os.environ["DATABASE_URL"].split(":")[2].split("@")[1].split("/")[0]
 		dbname = os.environ["DATABASE_URL"].split(":")[3].split("/")[1]
 		dbport = os.environ["DATABASE_URL"].split(":")[3].split("/")[0]
-		print "database name: " + dbname
+		logger.info("database name: " + dbname)
 		db_conn = psycopg2.connect(dbname=dbname, user=username, password=password, host=host,port=dbport)
 	else:
 		db_conn = psycopg2.connect(dbname='tiger', host='localhost', port='5432')
 
 
 	cursor = db_conn.cursor()
-	print "Connected!\n"
+	logger.debug("Connected!\n")
 
 	queryd = "SELECT * FROM mesaroads limit 1;"
 	cursor.execute(queryd)
 	records = cursor.fetchall()
-	print records
+	logger.debug(records)
 
 	# Always use this query:
 	query = "SELECT fullname, ST_ASGeoJSON(geom) FROM mesaroads WHERE fullname ~ '" + test_string + "'"
@@ -69,19 +73,18 @@ def find_in_database(test_string):
 # index: the index of the fragment within text
 # matches: list of matches we already found that we'd like to refine
 def seek_backwards(text, fragment, index, matches):
-	print fragment
+	logger.debug('text | fragment | index | matches %s | %s | %s | %s' % (text,fragment,index,matches))
 	if index == 0:
 		return matches
-	print index
 	prev_index = index - 1
 
 	this_word = text[prev_index]
-	print this_word
+	logger.debug(this_word)
 	if this_word in prefix.keys():
 		this_word = prefix[this_word]
 
 	test_string = this_word + ' ' + fragment
-	print test_string
+	logger.debug(test_string)
 	# get locations = matches for p + suffix in roads database/name column
 	new_matches = find_in_database(test_string)
 	print "matches"
@@ -118,12 +121,20 @@ def seek_backwards(text, fragment, index, matches):
 def geocode_text(production, sentence):
 	global is_production
 	is_production = production
+
+	if production:
+		logger.setLevel(logging.INFO)
+	else:
+		logger.setLevel(logging.DEBUG)
+
+
+
 	sentence = sentence.encode('utf8')
-	sentence = sentence.translate(string.maketrans("",""), string.punctuation).split()
+	sentence = sentence.translate(string.maketrans("",""), string.punctuation).split() #strip punctuation
 
 	all_matches = []
 	for i, word in enumerate(sentence):
-		if word in abbr.keys():
+		if word in abbr.keys(): # Abbrieviate all road types (e.g. Road -> Rd) to match our little list of suffixes
 			word = abbr[word]
 			#print word
 		if word in suffixes:
@@ -133,5 +144,5 @@ def geocode_text(production, sentence):
 			if these_matches:
 				all_matches += these_matches
 	return all_matches
-	print all_matches
+	logger.info(all_matches)
 # now do something with all_matches.
