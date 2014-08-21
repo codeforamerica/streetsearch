@@ -1,4 +1,3 @@
-# from nltk.util import ngrams
 import psycopg2
 import pprint
 import string
@@ -10,8 +9,6 @@ import os
 # Baseline Road
 
 pp = pprint.PrettyPrinter(indent=4)
-
-# sentence = open('council_example_text', 'r').readline().translate(string.maketrans("",""), string.punctuation).split()
 
 suffixes = 'Ave Blvd Cir Ct Dr Ln Pl Rd St Way'.split()
 
@@ -42,23 +39,17 @@ def find_in_database(test_string):
 	records = cursor.fetchall()
 	print records
 
-	# Always use this query: 
+	# Always use this query:
 	query = "SELECT fullname, ST_ASGeoJSON(geom) FROM mesaroads WHERE fullname ~ '" + test_string + "'"
 	cursor.execute(query);
 
 	# retrieve the records from the database
 	records = cursor.fetchall()
- 
-	# print out the records using pretty print
-	#print "test string: " + test_string
+
 	cursor.close()
 	conn.close()
 
 	return records
-
-
-# seek_backwards("long ass text here and s alma school rd", 'rd', 8, [])
-# seek_backwards("long ass text here and s Alma School rd", 's alma school rd', 5, ['s alma school rd'])
 
 
 # seek backwards in sentence from the tail that begins at index i
@@ -82,11 +73,11 @@ def seek_backwards(text, fragment, index, matches):
 	if this_word in prefix.keys():
 		this_word = prefix[this_word]
 
-	test_string = this_word + ' ' + fragment 
+	test_string = this_word + ' ' + fragment
 	print test_string
 	# get locations = matches for p + suffix in roads database/name column
 	new_matches = find_in_database(test_string)
-	print "matches" 
+	print "matches"
 	print new_matches
 	if len(new_matches) == 0:
 		return matches # stick w/ old results
@@ -95,7 +86,7 @@ def seek_backwards(text, fragment, index, matches):
 	else:
 		return seek_backwards(text, test_string, prev_index, new_matches) 
 
-# until end of sentence: 
+# until end of sentence:
 
 	# get word
 	# does suffixes contain word?
@@ -135,59 +126,3 @@ def geocode_text(sentence):
 	return all_matches
 	print all_matches
 # now do something with all_matches.
-
-# cur.execute("SELECT PREDIRABRV as prefix,NAME as name,SUFDIRABRV as suffix, geom FROM featnames LEFT OUTER JOIN roads ON (featnames.TLID = roads.TLID) WHERE name IS NOT NULL;")
-
-# matches = [s for s in cur.fetchall() if (in_twogram(possibilities_2, s[1]) or in_threegram(possibilities_3, s[1])] 
-# print "found:"
-# print matches
-# print sentence
-
-# cur.close()
-# conn.close()
-
-# # Given a street name, return the gram(s) that matches (if exists)
-# #NEED TO ADD && 
-# def in_twogram(grams, name):
-# 	return [g for g in grams if g[0] == name]
-
-# def in_threegram(grams, name):
-# 	return [g for g in grams if g[1] == name]
-
-# n = 2
-# twograms = ngrams(sentence.split(), n)
-# possibilities_2 = [x for x in twograms if x[1]=="Street."]
-# print possibilities_2
-
-# n = 3
-# threegrams = ngrams(sentence.split(), n)
-# possibilities_3 = [x for x in threegrams if x[2]=="Street."]
-# print possibilities_3
-
-# streets = [['W','8th','St', '123458918292'],['W','68th','St', '8932891982832']]
-
-# conn = psycopg2.connect("dbname=tiger")
-
-# cur = conn.cursor()
-
-# cur.execute("SELECT PREDIRABRV as prefix,NAME as name,SUFDIRABRV as suffix, geom FROM featnames LEFT OUTER JOIN roads ON (featnames.TLID = roads.TLID) WHERE name IS NOT NULL;")
-
-# matches = [s for s in cur.fetchall() if (in_twogram(possibilities_2, s[1]) or in_threegram(possibilities_3, s[1])] 
-# print "found:"
-# print matches
-# print sentence
-
-# cur.close()
-# conn.close()
-
-
-# #searches all the grams for each street name- 
-# #if within the gram there is a match for any one word 
-# #or two words, then match--grams are limited to those 
-# #ending in street, drive, or any other suffix. then limit on prefix. 
-
-# #gram size for road names (road name length in words, and frequency of those)
-# #WITH gramsize AS (SELECT name, array_length(regexp_split_to_array(name,'\s'),1) as wordcount FROM featnames) SELECT COUNT(distinct(name)), wordcount from gramsize group by wordcount ORDER BY wordcount DESC;
-
-
-
