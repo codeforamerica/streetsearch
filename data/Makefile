@@ -18,7 +18,7 @@ tl_2013_04013_edges2.shp:
 	SHAPE_ENCODING="ISO-8859-1" && ogr2ogr tl_2013_04013_edges2.shp tl_2013_04013_edges.shp -lco ENCODING=UTF-8
 
 roads.sql: tl_2013_04013_edges2.shp
-	shp2pgsql -W "LATIN1" -s 4269 tl_2013_04013_edges2.shp roads > roads.sql
+	shp2pgsql -dD -W "LATIN1" -s 4269 tl_2013_04013_edges2.shp roads > roads.sql
 
 #get maricopa county feature names from us census:
 tl_2013_04013_featnames.dbf:
@@ -26,12 +26,13 @@ tl_2013_04013_featnames.dbf:
 	unzip tl_2013_04013_featnames.zip
 
 roadnames.sql: tl_2013_04013_featnames.dbf
-	shp2pgsql -W "LATIN1" tl_2013_04013_featnames.shp roadnames > roadnames.sql
+	shp2pgsql -dD -W "LATIN1" tl_2013_04013_featnames.shp roadnames > roadnames.sql
 
 mesa_boundaries.sql:
 	ogr2ogr -f 'ESRI Shapefile' mesa_boundaries.shp "http://services2.arcgis.com/1gVyYKfYgW5Nxb1V/ArcGIS/rest/services/MesaAzCouncilDistricts/FeatureServer/2/query?where=objectid+%3D+objectid&outfields=*&f=json" OGRGeoJSON
-	shp2pgsql -W "LATIN1" -s 4269 mesa_boundaries.shp > mesa_boundaries.sql
+	shp2pgsql -dD -W "LATIN1" -s 4269 mesa_boundaries.shp > mesa_boundaries.sql
 
 
-
+clean:
+	git ls-files -o | xargs rm
 
