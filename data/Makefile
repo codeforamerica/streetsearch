@@ -9,7 +9,8 @@ database: roads.sql roadnames.sql mesa_boundaries.sql
 	psql -d tiger -q -f mesa_boundaries.sql
 	psql -d tiger -a -f postgis_union_length.sql
 
-
+test:
+	psql -d tiger -a -f postgis_union_length.sql
 
 
 tl_2013_04013_edges2.shp:
@@ -26,10 +27,12 @@ tl_2013_04013_featnames.dbf:
 	unzip tl_2013_04013_featnames.zip
 
 roadnames.sql: tl_2013_04013_featnames.dbf
-	shp2pgsql -dD -W "LATIN1" tl_2013_04013_featnames.shp roadnames > roadnames.sql
+	shp2pgsql -dD -W "LATIN1" -s 4269 tl_2013_04013_featnames.shp roadnames > roadnames.sql
 
 mesa_boundaries.sql:
-	ogr2ogr -f 'ESRI Shapefile' mesa_boundaries.shp "http://services2.arcgis.com/1gVyYKfYgW5Nxb1V/ArcGIS/rest/services/MesaAzCouncilDistricts/FeatureServer/2/query?where=objectid+%3D+objectid&outfields=*&f=json" OGRGeoJSON
+	rm -f mesa_boundaries.shp #in case it existed already
+	# ogr2ogr -f 'ESRI Shapefile' mesa_boundaries.shp "http://services2.arcgis.com/1gVyYKfYgW5Nxb1V/ArcGIS/rest/services/MesaAzCouncilDistricts/FeatureServer/2/query?where=objectid+%3D+objectid&outfields=*&f=json" OGRGeoJSON
+	ogr2ogr -f 'ESRI Shapefile' mesa_boundaries.shp "http://api.censusreporter.org/1.0/geo/tiger2012/16000US0446000?geom=true"
 	shp2pgsql -dD -W "LATIN1" -s 4269 mesa_boundaries.shp > mesa_boundaries.sql
 
 

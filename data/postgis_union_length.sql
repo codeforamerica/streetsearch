@@ -1,11 +1,16 @@
+SELECT UpdateGeometrySRID('mesa_boundaries','geom',4269);
+
+DROP TABLE IF EXISTS namedroads;
 CREATE TABLE namedroads AS SELECT roadnames.predirabrv as prefix, roadnames.suftypabrv as suffix, roadnames.name as name, roads.fullname as fullname, roads.geom FROM roadnames, roads WHERE roadnames.tlid = roads.tlid;
 
 --
-CREATE TABLE mesaroads AS SELECT fullname, namedroads.geom FROM mesa_boundaries, namedroads WHERE ST_DWithin(mesa_boundaries.wkb_geometry, namedroads.geom, 0);
+DROP TABLE IF EXISTS mesaroads;
+CREATE TABLE mesaroads AS SELECT fullname, namedroads.geom FROM mesa_boundaries, namedroads WHERE ST_DWithin(mesa_boundaries.geom, namedroads.geom, 0);
 
 -- group road rows by name
+DROP TABLE IF EXISTS roadlengths;
 CREATE TABLE roadlengths as select st_union(geom) as geom, fullname from mesaroads group by fullname;
-SELECT UpdateGeometrySRID('roadlengths','geom',4296);
+SELECT UpdateGeometrySRID('roadlengths','geom',4269);
 --
 -- add column for length
 ALTER TABLE roadlengths ADD COLUMN length NUMERIC(12,2);
