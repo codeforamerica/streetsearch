@@ -18,8 +18,6 @@ ALTER TABLE roadlengths ADD COLUMN length NUMERIC(12,2);
 -- populate length of roads
 UPDATE roadlengths SET length = ST_Length(ST_Transform(geom,32612));
 
-SELECT fullname, ST_ASText(geom) FROM roadlengths LIMIT 2;
-
 DROP TABLE mesaroads;
 
 CREATE TABLE mesaroads as SELECT * from roadlengths;
