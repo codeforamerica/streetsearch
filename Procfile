@@ -1,1 +1,1 @@
-web: gunicorn simplegeocoder_server:app
+web: gunicorn server:app
