@@ -14,5 +14,8 @@ debug_server:
 run_test:
 	 curl --data-urlencode $(TEST_TEXT) $(SERVER):$(PORT)
 
+test_server:
+	 make run_test SERVER=findlines-staging.herokuapp.com PORT=80
+
 database:
 	make -f data/Makefile
