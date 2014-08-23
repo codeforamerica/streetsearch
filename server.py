@@ -12,8 +12,11 @@ import sys
 
 if len(sys.argv) == 1:
 	production = True
+	environment = "Production"
 else: # ANY argument passed, assume dev environment.
 	production = False
+	environment = "Development"
+
 
 app = Flask(__name__)
 app.debug = True
@@ -22,7 +25,8 @@ app.debug = True
 def hello():
 	global production
 	if request.method=='GET':
-		return "Hello! See the Makefile for details on testing this."
+		return "Hello! See the Makefile for details on testing this. " + environment + ": # args: " + str(len(sys.argv))
+
 	if request.method=='POST':
 		sentence = request.form['fileupload']
 		print "Running in Production mode? " + str(production)
