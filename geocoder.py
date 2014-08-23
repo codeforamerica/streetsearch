@@ -1,5 +1,4 @@
 import psycopg2
-import pprint
 import string
 import os
 import logging
@@ -14,25 +13,18 @@ from geojson import Point
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
-is_production = False
-
-pp = pprint.PrettyPrinter(indent=4)
-
 suffixes = 'Ave Blvd Cir Ct Dr Ln Pl Rd St Way'.split()
 
 prefix = {'North':'N','South':'S','East':'E','West':'W'}
 abbr = {'Avenue': 'Ave', 'Boulevard': 'Blvd', 'Circle': 'Cir', 'Court': 'Ct', 'Drive': 'Dr', 'Lane':'Ln', 'Place': 'Pl','Road':'Rd','Street':'St','Way':'Way'}
 
-# TODO - also look for addresses (numbers)
 # find and return all roadnames that match test_string in the database.
-# test_string: a string containing natural language and potentially some addresses
+# test_string: something that might be a street name (or part of one)
 def find_in_database(test_string):
-	# print the connection string we will use to connect
-	#print "Connecting to database\n	->%s" % (connection_string)
 
-	global is_production
-	if is_production:
+	if 'DATABASE_URL' in os.environ:
 		# Configuration settings may vary from server to server:
+		# db_url = os.environ["DATABASE_URL"]
 		logger.info(os.environ["DATABASE_URL"])
 		username = os.environ["DATABASE_URL"].split(":")[1].replace("//","")
 		password = os.environ["DATABASE_URL"].split(":")[2].split("@")[0]
@@ -46,7 +38,7 @@ def find_in_database(test_string):
 
 
 	cursor = db_conn.cursor()
-	logger.debug("Connected!\n")
+	logger.debug("Connected to database.\n")
 
 	queryd = "SELECT * FROM mesaroads limit 1;"
 	cursor.execute(queryd)
@@ -146,16 +138,12 @@ def seek_backwards(text, fragment, index, matches):
 	# 	elsif locations2.length > 1
 
 # matches will be all the sentence fragments ("Alma School Rd", "295 8th Street") which match TIGER-based locations
-def geocode_text(production, sentence):
-	global is_production
-	is_production = production
+def geocode_text(sentence):
 
-	if production:
-		logger.setLevel(logging.INFO)
-	else:
+	if 'DEBUG' in os.environ:
 		logger.setLevel(logging.DEBUG)
-
-
+	else:
+		logger.setLevel(logging.INFO)
 
 	sentence = sentence.encode('utf8')
 	sentence = sentence.translate(string.maketrans("",""), string.punctuation).split() #strip punctuation
@@ -164,13 +152,11 @@ def geocode_text(production, sentence):
 	for i, word in enumerate(sentence):
 		if word in abbr.keys(): # Abbrieviate all road types (e.g. Road -> Rd) to match our little list of suffixes
 			word = abbr[word]
-			#print word
 		if word in suffixes:
-			print "seeking backwards from " + word + " at index: " + str(i)
+			logger.info("seeking backwards from " + word + " at index: " + str(i))
 			these_matches = seek_backwards(sentence, word, i, [])
-			print these_matches
+			logger.info(these_matches)
 			if these_matches:
 				all_matches += these_matches
 	return all_matches
 	logger.info(all_matches)
-# now do something with all_matches.

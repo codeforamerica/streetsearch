@@ -8,6 +8,9 @@ PORT = 5000
 run_server:
 	python server.py
 
+debug_server:
+	export DEBUG=true && make run_server
+
 run_test:
 	 curl --data-urlencode $(TEST_TEXT) $(SERVER):$(PORT)
 
