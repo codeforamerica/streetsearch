@@ -55,7 +55,7 @@ db_boundaries: mesa_boundaries.sql
 	psql $(DB) -q -f mesa_boundaries.sql
 
 db_union_length:
-	psql $(DB) -a -f postgis_union_length.sql
+	psql $(DB) -a -f data/postgis_union_length.sql
 
 
 tl_2013_04013_edges2.shp:
