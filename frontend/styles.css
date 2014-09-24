@@ -78,7 +78,7 @@ html, button, input, select, textarea,
   width: 40%;
 }
 
-.geo textarea {
+.input textarea {
   padding: 1em;
   line-height: 1.5;
   resize: none;
@@ -92,7 +92,7 @@ html, button, input, select, textarea,
   width: 100%;
 }
 
-.geo button {
+.input button {
   position: absolute;
   right: 0;
   bottom: 0;
