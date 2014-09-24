@@ -64,6 +64,7 @@ html, button, input, select, textarea,
 .pure-menu .pure-menu-selected a:hover,
 .pure-menu .pure-menu-selected a:focus {
   background-color: #fff;
+  color: #000;
 }
 
 .panels .panel {
@@ -76,6 +77,15 @@ html, button, input, select, textarea,
   bottom: 0;
   right: 60%;
   width: 40%;
+}
+
+h2 {
+  margin: 0;
+}
+
+#found-roads p {
+  padding: 6px 0;
+  border-bottom: solid 1px #ccc;
 }
 
 .input textarea {
@@ -102,4 +112,30 @@ html, button, input, select, textarea,
   background-color: #329632;
   border-radius: 0;
   border: none;
+  font-weight: 700;
+  color: #fff;
+}
+
+#export {
+  background-color: #329632;
+  font-weight: 400;
+  color: #fff;
+  float: right;
+  font-size: 60%;
+}
+
+#geojson {
+  padding: 1em;
+  line-height: 1.5;
+  resize: none;
+  border: none;
+  outline: none;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 40%;
+  border-left: 1px solid #ccc;
+  width: 60%;
+  font-family: monospace;
 }
