@@ -1,0 +1,105 @@
+@import url(http://fonts.googleapis.com/css?family=Open+Sans:400,700);
+
+/*
+Green: #329632
+Black: #0a1e0a
+Red:   #ef1818
+ */
+
+#map { 
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 40%;
+  border-left: 1px solid #ccc;
+}
+
+.pure-g > div, * {
+  -webkit-box-sizing: border-box;
+     -moz-box-sizing: border-box;
+          box-sizing: border-box;
+}
+
+.l-box {
+  padding: 1em;
+}
+
+.pure-menu .pure-menu-heading {
+  padding: 10px;
+}
+
+.pure-menu .pure-menu-heading > img {
+  display: inline-block;
+  height: 65px;
+  width: auto;
+}
+
+html, button, input, select, textarea,
+.pure-g [class *= "pure-u"] {
+  font-family: "Open Sans", Helvetica, Arial, serif;
+}
+
+.pure-menu.pure-menu-open {
+  background-color: #eee;
+}
+
+.pure-menu ul {
+  background-color: #eee;
+  float: right;
+}
+
+.pure-menu li a {
+  padding: 32px 20px;
+  background-color: #eee;
+}
+
+.pure-menu li a:hover,
+.pure-menu li a:focus {
+  background-color: #243824;
+  color: #fff;
+}
+
+.pure-menu .pure-menu-selected a,
+.pure-menu .pure-menu-selected a:hover,
+.pure-menu .pure-menu-selected a:focus {
+  background-color: #fff;
+}
+
+.panels .panel {
+  padding: 1em;
+  line-height: 1.5;
+  background: #fff;
+  position: absolute;
+  top: 90px;
+  left: 0;
+  bottom: 0;
+  right: 60%;
+  width: 40%;
+}
+
+.geo textarea {
+  padding: 1em;
+  line-height: 1.5;
+  resize: none;
+  border: none;
+  outline: none;
+  position: absolute;
+  right: 0;
+  bottom: 60px;
+  top: 0;
+  left: 0;
+  width: 100%;
+}
+
+.geo button {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 60px;
+  width: 100%;
+  background-color: #329632;
+  border-radius: 0;
+  border: none;
+}

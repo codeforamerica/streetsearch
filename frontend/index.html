@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lil' Geocoder</title>
+  
+  <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.5.0/pure-min.css">
+  <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="pure-g">
+    <div class="pure-u-2-5">
+      <div class="pure-menu pure-menu-open pure-menu-horizontal">
+        <a href="#" class="pure-menu-heading"><img src="logo.png" alt="Lil' Geocoder"></a>
+        <ul>
+          <li class="pure-menu-selected"><a href="#">Input</a></li>
+          <li><a href="#">Found</a></li>
+          <li><a href="#">WTF?</a></li>
+        </ul>
+      </div>
+      <div class="panels">
+        <div class="geo panel">
+          <textarea name="geotext" id="geotext" placeholder="Paste the text you want to geocode here."></textarea>
+          <button id="geocode" class="pure-button pure-button-primary">Geocode This Text</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="pure-u-3-5"><div id="map"></div></div>
+  </div>
+  
+  <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+  <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
+  <script src="scripts.js"></script>
+</body>
+</html>
