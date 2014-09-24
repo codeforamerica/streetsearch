@@ -1,1 +1,14 @@
 *.pyc
+venv
+*.dbf
+*.prj
+*.shp
+*.shp.xml
+*.dbf.xml
+*.shx
+*.zip
+*.cpg
+
+roads.sql
+roadnames.sql
+mesa_boundaries.sql
