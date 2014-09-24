@@ -15,15 +15,21 @@
       <div class="pure-menu pure-menu-open pure-menu-horizontal">
         <a href="#" class="pure-menu-heading"><img src="logo.png" alt="Lil' Geocoder"></a>
         <ul>
-          <li class="pure-menu-selected"><a href="#">Input</a></li>
-          <li><a href="#">Found</a></li>
-          <li><a href="#">WTF?</a></li>
+          <li class="pure-menu-selected"><a href="#" data-target="input">Input</a></li>
+          <li><a href="#" data-target="found">Found</a></li>
+          <li><a href="#" data-target="wtf">WTF?</a></li>
         </ul>
       </div>
       <div class="panels">
-        <div class="geo panel">
+        <div class="input panel">
           <textarea name="geotext" id="geotext" placeholder="Paste the text you want to geocode here."></textarea>
           <button id="geocode" class="pure-button pure-button-primary">Geocode This Text</button>
+        </div>
+        <div class="found panel">
+          
+        </div>
+        <div class="wtf panel">
+          
         </div>
       </div>
     </div>
@@ -33,6 +39,7 @@
   
   <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
   <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.7.0/underscore-min.js"></script>
   <script src="scripts.js"></script>
 </body>
 </html>
