@@ -6,7 +6,7 @@ Black: #0a1e0a
 Red:   #ef1818
  */
 
-#map { 
+#map {
   position: absolute;
   top: 0;
   bottom: 0;
@@ -83,7 +83,7 @@ h2 {
   margin: 0;
 }
 
-#found-roads p {
+#found-roads div {
   padding: 6px 0;
   border-bottom: solid 1px #ccc;
 }

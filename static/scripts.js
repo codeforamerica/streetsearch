@@ -16,18 +16,33 @@ function geocodeText(text) {
 };
 
 function populateMap(line) {
-  console.log(line);
-  lg.districtLines = L.geoJson().addTo(map);
+  lg.districtLines = L.geoJson(null, {
+    style: { color: '#0a1e0a', weight: 5 },
+    onEachFeature: function (feature, layer) {
+      $("#found-roads").append("<div data-layer-id='"+layer._leaflet_id+"'>"+feature.properties.founditem+"</div>");
+
+      // Show which found item is being hovered over
+      $("#found-roads > div[data-layer-id='"+layer._leaflet_id+"']").hover(function() {
+        var theLayer = lg.districtLines.getLayer(layer._leaflet_id);
+        theLayer.setStyle( { color: '#329632', weight: 7 } );
+      }, function() {
+        var theLayer = lg.districtLines.getLayer(layer._leaflet_id);
+        theLayer.setStyle( { color: '#0a1e0a', weight: 5 } );
+      });
+    }
+  }).addTo(map);
+
   lines = line.text;
   _.forEach(lines, function(line) {
-    
-    // Add to found list
-    $("#found-roads").append("<p>" + line[0] + "</p>");
-    
+
     // Add to map
-    lg.districtLines.addData($.parseJSON(line[1]));
+    var data = $.parseJSON(line[1]);
+    data.properties = { 'founditem': line[0] };
+
+    lg.districtLines.addData(data);
   });
 
+  // No data, no button
   $("#export").show();
 
   // Force show the "Found" tab
@@ -56,11 +71,11 @@ $(function() {
     var target = $(e.target);
     var clickedTab = target.data("tab");
 
-    if(clickedTab == "input") {
+    if (clickedTab == "input") {
       $(".input.panel").show();
       $(".found.panel").hide();
       //$(".wtf.panel").hide();
-    } 
+    }
     else if (clickedTab == "found") {
       $(".input.panel").hide();
       $(".found.panel").show();
@@ -69,7 +84,7 @@ $(function() {
     else if (clickedTab == "wtf") {
       $(".input.panel").hide();
       $(".found.panel").hide();
-     //$(".wtf.panel").show();      
+     //$(".wtf.panel").show();
     }
 
     // Only show active tab
