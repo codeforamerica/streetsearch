@@ -8,8 +8,7 @@ L.tileLayer('http://{s}.tiles.mapbox.com/v3/ardouglass.h3mingmm/{z}/{x}/{y}.png'
 function geocodeText(text) {
    $.ajax({
     type: 'POST',
-    crossDomain: true,
-    url: 'http://findlines.herokuapp.com',
+    url: '/',
     data: { fileupload: text},
     dataType: 'json',
     success: populateMap

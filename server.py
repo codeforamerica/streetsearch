@@ -1,13 +1,13 @@
 from flask import Flask, render_template, request, url_for, jsonify
 from geocoder import *
 
-app = Flask(__name__)
+app = Flask(__name__, static_url_path='')
 app.debug = True
 
 @app.route('/', methods=['GET','POST'])
 def hello():
 	if request.method=='GET':
-		return "Hello! See the Makefile for details on testing this."
+		return app.send_static_file('index.html')
 
 	if request.method=='POST':
 		sentence = request.form['fileupload']
