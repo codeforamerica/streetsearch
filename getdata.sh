@@ -40,3 +40,8 @@ ogr2ogr -f "PostgreSQL" PG:"host=localhost dbname=tiger" "http://services2.arcgi
 
 psql -d tiger -a -f postgis_union_length.sql
 
+#get geo for place
+http://api.censusreporter.org/1.0/geo/tiger2012/16000US3651000?geom=true
+
+#search for geo id for name
+http://api.censusreporter.org/1.0/geo/search?q=New%20York&sumlevs=010,020,030,040,050,060,160,250,310,500,610,620,860,950,960,970
