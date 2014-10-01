@@ -77,7 +77,7 @@ roadnames.sql: tl_2013_04013_featnames.dbf
 	shp2pgsql -D -W "LATIN1" -s 4269 tl_2013_04013_featnames roadnames > roadnames.sql
 
 # Mesa: 16000US0446000
-PLACEID := 16000US0446000
+PLACEID := 16000US3651000
 
 mesa_boundaries.sql:
 	rm -f mesa_boundaries.shp #in case it existed already
@@ -85,8 +85,5 @@ mesa_boundaries.sql:
 	ogr2ogr -f 'ESRI Shapefile' mesa_boundaries.shp "http://api.censusreporter.org/1.0/geo/tiger2012/$(PLACEID)?geom=true"
 	shp2pgsql -D -W "LATIN1" -s 4269 mesa_boundaries.shp > mesa_boundaries.sql
 
-
 clean:
 	git ls-files -o | xargs rm
-
-
