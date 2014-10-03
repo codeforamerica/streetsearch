@@ -15,35 +15,46 @@ function geocodeText(text) {
   });
 };
 
-function populateMap(line) {
-  lg.districtLines = L.geoJson(null, {
+function populateMap(response) {
+  // add a new layer to the map
+  lg.features = L.geoJson(null, {
     style: { color: '#0a1e0a', weight: 5 },
     onEachFeature: function (feature, layer) {
-      $("#found-roads").append("<div data-layer-id='"+layer._leaflet_id+"'>"+feature.properties.founditem+"</div>");
+
+      el = $("<div>"+feature.properties.founditem+"</div>");
+      $("#found-roads").append(el);
+      if (layer instanceof L.Marker){
+        layer.setOpacity(.5);
+      }
 
       // Show which found item is being hovered over
-      $("#found-roads > div[data-layer-id='"+layer._leaflet_id+"']").hover(function() {
-        var theLayer = lg.districtLines.getLayer(layer._leaflet_id);
-        theLayer.setStyle( { color: '#329632', weight: 7 } );
+      el.hover(function() {
+        if (layer instanceof L.Marker){
+          layer.setOpacity(1);
+        } else { // assume we're dealing with a line
+          layer.setStyle( { color: '#329632', weight: 7 } );
+        }
         $(this).css('font-weight', 'bold');
         $(this).css('color', '#329632');
       }, function() {
-        var theLayer = lg.districtLines.getLayer(layer._leaflet_id);
-        theLayer.setStyle( { color: '#0a1e0a', weight: 5 } );
+        if (layer instanceof L.Marker){
+          layer.setOpacity(.5);
+        } else { // assume we're dealing with a line
+          layer.setStyle( { color: '#0a1e0a', weight: 5 } );
+        }
         $(this).css('font-weight', 'normal');
         $(this).css('color', 'black');
       });
     }
   }).addTo(map);
 
-  lines = line.text;
-  _.forEach(lines, function(line) {
+  features = response.text;
+  _.forEach(features, function(feature) {
 
     // Add to map
-    var data = $.parseJSON(line[1]);
-    data.properties = { 'founditem': line[0] };
-
-    lg.districtLines.addData(data);
+    var data = $.parseJSON(feature[1]);
+    data.properties = { 'founditem': feature[0] };
+    lg.features.addData(data);
   });
 
   // No data, no button
@@ -62,6 +73,11 @@ $(function() {
   // Geocode
   $("#geocode").click(function(e) {
     e.preventDefault();
+
+    // clear any old results.
+    $("#found-roads").empty();
+
+    // send off the text for geocoding
     geocodeText($("#geotext").val());
 
     // Let users know something is happening
@@ -100,7 +116,7 @@ $(function() {
   $("#export").click(function(e) {
     e.preventDefault();
 
-    $("#geojson").val(JSON.stringify(lg.districtLines.toGeoJSON()));
+    $("#geojson").val(JSON.stringify(lg.features.toGeoJSON()));
 
     $("#map").toggle();
     $("#geojson").toggle();
