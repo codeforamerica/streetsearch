@@ -105,7 +105,7 @@ def seek_backwards(text, fragment, index, matches):
 				logger.debug(results[0].coordinates)
 
 				if len(results) > 0:
-					geocoded_match = (maybe_address, Point(results[0].coordinates))
+					geocoded_match = (maybe_address, '%s' % Point(results[0].coordinates))
 					logger.debug(geocoded_match)
 					logger.debug("Found specific geocoded match; returning it")
 					return [geocoded_match]
