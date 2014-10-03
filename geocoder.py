@@ -158,5 +158,6 @@ def geocode_text(sentence):
 			logger.info(these_matches)
 			if these_matches:
 				all_matches += these_matches
-	return all_matches
+
 	logger.info(all_matches)
+	return all_matches
