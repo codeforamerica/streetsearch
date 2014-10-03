@@ -62,6 +62,11 @@ $(function() {
   // Geocode
   $("#geocode").click(function(e) {
     e.preventDefault();
+
+    // clear any old results.
+    $("#found-roads").empty();
+
+    // send off the text for geocoding
     geocodeText($("#geotext").val());
 
     // Let users know something is happening
