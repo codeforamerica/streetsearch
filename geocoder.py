@@ -105,7 +105,13 @@ def seek_backwards(text, fragment, index, matches):
 				logger.debug(results[0].coordinates)
 
 				if len(results) > 0:
-					geocoded_match = (maybe_address, '%s' % Point(results[0].coordinates))
+					# note! pygeocoder returns coordinates in lat,lng format [1] while GeoJSON expects lng,lat order [2]
+					# 1: https://github.com/rapidfat/pygeocoder/blob/6e3c7f098f450e222acb65c011089c74c25432f4/pygeolib.py#L92
+					# 2: http://geojson.org/geojson-spec.html#positions
+					# so we reverse the order of the coordinates, otherwise points end up on Antarctica instead of Arizona
+					coords = tuple(reversed(results[0].coordinates))
+
+					geocoded_match = (maybe_address, '%s' % Point(coords))
 					logger.debug(geocoded_match)
 					logger.debug("Found specific geocoded match; returning it")
 					return [geocoded_match]
