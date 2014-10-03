@@ -25,9 +25,13 @@ function populateMap(line) {
       $("#found-roads > div[data-layer-id='"+layer._leaflet_id+"']").hover(function() {
         var theLayer = lg.districtLines.getLayer(layer._leaflet_id);
         theLayer.setStyle( { color: '#329632', weight: 7 } );
+        $(this).css('font-weight', 'bold');
+        $(this).css('color', '#329632');
       }, function() {
         var theLayer = lg.districtLines.getLayer(layer._leaflet_id);
         theLayer.setStyle( { color: '#0a1e0a', weight: 5 } );
+        $(this).css('font-weight', 'normal');
+        $(this).css('color', 'black');
       });
     }
   }).addTo(map);
