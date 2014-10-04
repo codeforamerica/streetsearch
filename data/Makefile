@@ -57,24 +57,26 @@ db_boundaries: mesa_boundaries.sql
 db_union_length:
 	psql $(DB) -a -f data/postgis_union_length.sql
 
+#tiger line census name
+#NYC = 36061
+TIGERID = 36061
 
-tl_2013_36061_edges2.shp:
-	wget ftp://ftp2.census.gov/geo/tiger/TIGER2013/EDGES/tl_2013_36061_edges.zip
-	unzip tl_2013_36061_edges.zip
-	SHAPE_ENCODING="ISO-8859-1" && ogr2ogr tl_2013_36061_edges2.shp tl_2013_36061_edges.shp -lco ENCODING=UTF-8
+tl_2013_${TIGERID}_edges2.shp:
+	wget ftp://ftp2.census.gov/geo/tiger/TIGER2013/EDGES/tl_2013_${TIGERID}_edges.zip
+	unzip tl_2013_${TIGERID}_edges.zip
+	SHAPE_ENCODING="ISO-8859-1" && ogr2ogr tl_2013_${TIGERID}_edges2.shp tl_2013_${TIGERID}_edges.shp -lco ENCODING=UTF-8
 
-roads.sql: tl_2013_36061_edges2.shp
-	shp2pgsql -D -W "LATIN1" -s 4269 tl_2013_36061_edges2.shp roads > roads.sql
-
+roads.sql: tl_2013_${TIGERID}_edges2.shp
+	shp2pgsql -D -W "LATIN1" -s 4269 tl_2013_${TIGERID}_edges2.shp roads > roads.sql
 
 #get maricopa county feature names from us census:
-tl_2013_36061_featnames.dbf:
-	wget ftp://ftp2.census.gov/geo/tiger/TIGER2013/FEATNAMES/tl_2013_36061_featnames.zip
-	unzip tl_2013_36061_featnames.zip
+tl_2013_${TIGERID}_featnames.dbf:
+	wget ftp://ftp2.census.gov/geo/tiger/TIGER2013/FEATNAMES/tl_2013_${TIGERID}_featnames.zip
+	unzip tl_2013_${TIGERID}_featnames.zip
 
-roadnames.sql: tl_2013_36061_featnames.dbf
-	@echo "You can ignore the following notice about a missing tl_2013_36061_featnames.shp; we don't need it"
-	shp2pgsql -D -W "LATIN1" -s 4269 tl_2013_36061_featnames roadnames > roadnames.sql
+roadnames.sql: tl_2013_${TIGERID}_featnames.dbf
+	@echo "You can ignore the following notice about a missing tl_2013_${TIGERID}_featnames.shp; we don't need it"
+	shp2pgsql -D -W "LATIN1" -s 4269 tl_2013_${TIGERID}_featnames roadnames > roadnames.sql
 
 # Mesa: 16000US0446000
 # NYC: 16000US3651000
