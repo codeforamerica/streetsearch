@@ -1,6 +1,10 @@
 var lg = {};
 
-var map = L.map('map').setView([33.4150, -111.8314], 11);
+// mesa latlong = [33.4150, -111.8314]
+// nyc = [40.7210,-73.9823]
+var localized_latlong = [40.7210,-73.9823]
+
+var map = L.map('map').setView(, 11);
 L.tileLayer('http://{s}.tiles.mapbox.com/v3/ardouglass.h3mingmm/{z}/{x}/{y}.png', {
     maxZoom: 18
 }).addTo(map);
@@ -20,10 +24,10 @@ function populateMap(line) {
   lg.districtLines = L.geoJson().addTo(map);
   lines = line.text;
   _.forEach(lines, function(line) {
-    
+
     // Add to found list
     $("#found-roads").append("<p>" + line[0] + "</p>");
-    
+
     // Add to map
     lg.districtLines.addData($.parseJSON(line[1]));
   });
@@ -60,7 +64,7 @@ $(function() {
       $(".input.panel").show();
       $(".found.panel").hide();
       //$(".wtf.panel").hide();
-    } 
+    }
     else if (clickedTab == "found") {
       $(".input.panel").hide();
       $(".found.panel").show();
@@ -69,7 +73,7 @@ $(function() {
     else if (clickedTab == "wtf") {
       $(".input.panel").hide();
       $(".found.panel").hide();
-     //$(".wtf.panel").show();      
+     //$(".wtf.panel").show();
     }
 
     // Only show active tab
