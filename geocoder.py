@@ -40,13 +40,13 @@ def find_in_database(test_string):
 	cursor = db_conn.cursor()
 	logger.debug("Connected to database.\n")
 
-	queryd = "SELECT * FROM mesaroads limit 1;"
+	queryd = "SELECT * FROM roadswithingrouped limit 1;"
 	cursor.execute(queryd)
 	records = cursor.fetchall()
 	logger.debug(records)
 
 	# Always use this query:
-	query = "SELECT fullname, ST_ASGeoJSON(geom) FROM mesaroads WHERE fullname ~ '" + test_string + "'"
+	query = "SELECT fullname, ST_ASGeoJSON(geom) FROM roadswithingrouped WHERE fullname ~ '" + test_string + "'"
 	cursor.execute(query);
 
 	# retrieve the records from the database
@@ -129,16 +129,16 @@ def seek_backwards(text, fragment, index, matches):
 
 	# if no, advance to next word
 
-	# if yes, get previous word P 
+	# if yes, get previous word P
 
 	# get locations = matches for p + suffix in roads database/name column
 
 	# if locations.number = 1 done
-	# if locations.number = 0 then advance to next word 
+	# if locations.number = 0 then advance to next word
 
-	# if locations.number > 1 
-	# 	get previous word p' 
-	# 	locations2 = matches for p' + p + suffix 
+	# if locations.number > 1
+	# 	get previous word p'
+	# 	locations2 = matches for p' + p + suffix
 	# 	if locations2.length = 1 done
 	# 	if locations2.length = 0, return locations
 	# 	elsif locations2.length > 1
