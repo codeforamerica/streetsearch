@@ -1,4 +1,3 @@
-
 CREATE VIEW namedroads
   AS SELECT roadnames.predirabrv as prefix,
   roadnames.suftypabrv as suffix,
@@ -19,3 +18,6 @@ CREATE TABLE uplacetableid
   AS geom, fullname
   FROM roadswithin
   GROUP BY fullname;
+
+DROP VIEW roadswithin;
+DROP VIEW namedroads;
