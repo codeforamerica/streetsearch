@@ -13,6 +13,7 @@ CREATE VIEW roadswithin
   WHERE ST_DWithin(boundaries.geom, namedroads.geom, 0);
 
 -- group road rows by name
+DROP TABLE uplacetableid;
 CREATE TABLE uplacetableid
   AS SELECT st_union(geom)
   AS geom, fullname
