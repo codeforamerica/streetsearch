@@ -1,7 +1,9 @@
 from flask import Flask, render_template, request, url_for, jsonify
+from flask.ext.cors import CORS
 from geocoder import *
 
 app = Flask(__name__, static_url_path='')
+cors = CORS(app)
 app.debug = True
 
 @app.route('/', methods=['GET','POST'])
