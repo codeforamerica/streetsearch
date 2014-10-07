@@ -8,3 +8,4 @@ psycopg2==2.5.3
 wsgiref==0.1.2
 pygeocoder==1.2.5
 geojson==1.0.7
+flask-cors==1.9.0
