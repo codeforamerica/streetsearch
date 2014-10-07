@@ -1,5 +1,5 @@
 DB = -d tiger
-CITYNAME = "portland"
+CITYNAME = "dallas"
 
 tables:  db_lines db_group_union
 

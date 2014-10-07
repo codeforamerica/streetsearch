@@ -7,12 +7,12 @@ HEROKU = postgres://qllufmrlpjjoom:QUrv1bd2dEn6wU5SFipP7EL5xB@ec2-54-225-103-9.c
 #tiger line census name
 #NYC = 36061
 #MESA = 04013
-# TIGERID = 36061
+TIGERID = 36061
 
 #place id for city boundary data
 # Mesa: 16000US0446000
 # NYC: 16000US3651000
-# PLACEID = 16000US3651000
+PLACEID = 16000US3651000
 
 # make database PSQL="heroku pg:psql"
 
@@ -41,7 +41,7 @@ database_push: database
 
 db_dev_drop:
 	psql -c "DROP DATABASE IF EXISTS tiger"
-	psql -c "DROP EXTENSION IF EXISTS postgis"
+	psql -c "DROP EXTENSION IF EXISTS postgis CASCADE"
 
 db_stage_drop:
 	heroku pg:reset --confirm findlines-staging DATABASE_URL
