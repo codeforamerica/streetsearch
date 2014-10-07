@@ -37,17 +37,21 @@ def find_in_database(test_string):
 		db_conn = psycopg2.connect(dbname='tiger', host='localhost', port='5432')
 
 
+
+
 	cursor = db_conn.cursor()
 	logger.debug("Connected to database.\n")
 
-	queryd = "SELECT * FROM roadswithingrouped limit 1;"
-	cursor.execute(queryd)
-	records = cursor.fetchall()
-	logger.debug(records)
+	# queryd = "SELECT * FROM roadswithingrouped limit 1;"
+	# cursor.execute(queryd)
+	# cursor.execute(open("union_group.sql", "r").read())
+	# records = cursor.fetchall()
+	# logger.debug(records)
 
 	# Always use this query:
-	query = "SELECT fullname, ST_ASGeoJSON(geom) FROM roadswithingrouped WHERE fullname ~ '" + test_string + "'"
-	cursor.execute(query);
+
+	# cursor.execute(query);
+	cursor.execute(open("union_group.sql", "r").read())
 
 	# retrieve the records from the database
 	records = cursor.fetchall()
