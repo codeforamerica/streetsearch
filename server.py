@@ -5,7 +5,7 @@ app = Flask(__name__, static_url_path='')
 app.debug = True
 
 @app.route('/', methods=['GET','POST'])
-def hello():
+def index():
 	if request.method=='GET':
 		return app.send_static_file('index.html')
 
