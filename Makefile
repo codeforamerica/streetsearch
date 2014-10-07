@@ -19,3 +19,12 @@ test_server:
 
 database:
 	make -f data/Makefile
+
+find_place_id:
+	curl -G -v "http://api.censusreporter.org/1.0/geo/search" --data-urlencode "q=${PLACENAME}"
+	@printf "\n pass the select full_geoid as a parameter to find_tiger_line_id \n e.g. make find_tiger_line_id PLACEID=\"16000US3651000\"\n"
+
+#get geo-id of parent
+find_tiger_line_id:
+	curl -G -v "http://api.censusreporter.org/1.0/geo/tiger2012/${PLACEID}/parents"
+	@printf "\n the last 6 digits of the GEOID field \n at level 50 or, the county, are the tiger line id \n pass these as an argument \n e.g. make database TIGERID=\"36061\" PLACEID=\"16000US3651000\"\n"
