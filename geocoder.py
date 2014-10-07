@@ -48,10 +48,11 @@ def find_in_database(test_string):
 	# Always use this query:
 
 	# cursor.execute(query);
-	cursor.execute(open("union_group.sql", "r").read())
+	PLACEID = "b16000US3651000"
+	query = "SELECT name, ST_ASGeoJSON(geom) FROM" + PLACEID + "WHERE name ~ '" + test_string + "'"
 
-	query = "SELECT fullname, ST_ASGeoJSON(geom) FROM roadswithingrouped WHERE fullname ~ '" + test_string + "'"
 
+	cursor.execute(query)
 	# retrieve the records from the database
 	records = cursor.fetchall()
 	cursor.close()
