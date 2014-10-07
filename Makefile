@@ -18,10 +18,13 @@ test_server:
 	 make run_test SERVER=findlines-staging.herokuapp.com PORT=80
 
 database:
-	make -f data/Makefile
+	make -f data/Makefile.Tiger
 
-tables:
-	make tables -f data/Makefile
+tiger_tables:
+	make tables -f data/Makefile.Tiger
+
+metro_tables:
+	make tables -f data/Makefile.Metro
 
 find_place_id:
 	curl -G -v "http://api.censusreporter.org/1.0/geo/search" --data-urlencode "q=${PLACENAME}"

@@ -1,30 +1,21 @@
 DB = -d tiger
+CITYNAME = "portland"
 
-database: db_dev_drop db_dev_create db_lines db_group_union
-
-db_dev_drop:
-	psql -c "DROP DATABASE IF EXISTS tiger"
-
-db_stage_drop:
-	heroku pg:reset --confirm findlines-staging DATABASE_URL
-
-db_dev_create:
-	psql -c "CREATE DATABASE tiger"
-	psql $(DB) -c "CREATE EXTENSION postgis;"
+tables:  db_lines db_group_union
 
 db_group_union:
-	cat data/union_group_metro.sql | sed -e "s/placename/portland/" | psql $(DB) -a
+	cat data/union_group_metro.sql | sed -e "s/placename/${CITYNAME}/" | psql $(DB) -a
 
-lines/portland.osm2pgsql-shapefiles.zip:
-	wget -P lines/ http://osm-extracted-metros.s3.amazonaws.com/portland.osm2pgsql-shapefiles.zip
+lines/${CITYNAME}.osm2pgsql-shapefiles.zip:
+	wget -P lines/ http://osm-extracted-metros.s3.amazonaws.com/${CITYNAME}.osm2pgsql-shapefiles.zip
 
-lines/portland-osm-line.shp: lines/portland.osm2pgsql-shapefiles.zip
-	unzip -d lines/ lines/portland.osm2pgsql-shapefiles.zip
+lines/${CITYNAME}-osm-line.shp: lines/${CITYNAME}.osm2pgsql-shapefiles.zip
+	unzip -d lines/ lines/${CITYNAME}.osm2pgsql-shapefiles.zip
 
-lines/portland.sql: lines/portland-osm-line.shp
-	ogr2ogr -f "ESRI Shapefile" -dialect SQLite -sql "SELECT name FROM 'portland.osm-line'" lines/portland.shp lines/portland.osm-line.shp -lco ENCODING=UTF-8
-	mv lines/portland.dbf lines/portland.osm-line.dbf
-	shp2pgsql -D -W "LATIN1" -s 4326 lines/portland.osm-line.shp portland > lines/portland.sql
+lines/${CITYNAME}.sql: lines/${CITYNAME}-osm-line.shp
+	ogr2ogr -f "ESRI Shapefile" -dialect SQLite -sql "SELECT name FROM '${CITYNAME}.osm-line'" lines/${CITYNAME}.shp lines/${CITYNAME}.osm-line.shp -lco ENCODING=UTF-8
+	mv lines/${CITYNAME}.dbf lines/${CITYNAME}.osm-line.dbf
+	shp2pgsql -D -W "LATIN1" -s 4326 lines/${CITYNAME}.osm-line.shp ${CITYNAME} > lines/${CITYNAME}.sql
 
-db_lines: lines/portland.sql
-	psql $(DB) -q -f lines/portland.sql
+db_lines: lines/${CITYNAME}.sql
+	psql $(DB) -q -f lines/${CITYNAME}.sql
