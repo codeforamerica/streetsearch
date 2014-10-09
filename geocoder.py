@@ -18,6 +18,8 @@ suffixes = 'Ave Blvd Cir Ct Dr Ln Pl Rd St Way'.split()
 prefix = {'North':'N','South':'S','East':'E','West':'W'}
 abbr = {'Avenue': 'Ave', 'Boulevard': 'Blvd', 'Circle': 'Cir', 'Court': 'Ct', 'Drive': 'Dr', 'Lane':'Ln', 'Place': 'Pl','Road':'Rd','Street':'St','Way':'Way'}
 
+CITYNAME =  'Manhattan, New York, NY'
+
 # find and return all roadnames that match test_string in the database.
 # test_string: something that might be a street name (or part of one)
 def find_in_database(test_string):
@@ -48,8 +50,8 @@ def find_in_database(test_string):
 	# Always use this query:
 
 	# cursor.execute(query);
-	PLACEID = "b16000US3651000"
-	query = "SELECT name, ST_ASGeoJSON(geom) FROM" + PLACEID + "WHERE name ~ '" + test_string + "'"
+	PLACEID = "ub16000US3651000" #manhattan
+	query = "SELECT name, ST_ASGeoJSON(geom) FROM " + PLACEID + "WHERE name ~ '" + test_string + "'"
 
 
 	cursor.execute(query)
@@ -104,7 +106,7 @@ def seek_backwards(text, fragment, index, matches):
 			if is_number(maybe_address_number):
 				maybe_address = maybe_address_number + ' ' + test_string
 				logger.debug('Address to Geocode (TODO): %s' % maybe_address)
-				results = Geocoder.geocode(maybe_address + ' Mesa, AZ')
+				results = Geocoder.geocode(maybe_address + CITYNAME)
 				logger.debug('Geocoder returned this location:')
 				logger.debug(results[0].coordinates)
 
