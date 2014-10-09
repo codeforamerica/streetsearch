@@ -18,11 +18,10 @@ suffixes = 'Ave Blvd Cir Ct Dr Ln Pl Rd St Way'.split()
 prefix = {'North':'N','South':'S','East':'E','West':'W'}
 abbr = {'Avenue': 'Ave', 'Boulevard': 'Blvd', 'Circle': 'Cir', 'Court': 'Ct', 'Drive': 'Dr', 'Lane':'Ln', 'Place': 'Pl','Road':'Rd','Street':'St','Way':'Way'}
 
-CITYNAME =  'Manhattan, New York, NY'
 
 # find and return all roadnames that match test_string in the database.
 # test_string: something that might be a street name (or part of one)
-def find_in_database(test_string):
+def find_in_database(test_string, placeid):
 
 	if 'DATABASE_URL' in os.environ:
 		# Configuration settings may vary from server to server:
@@ -50,9 +49,8 @@ def find_in_database(test_string):
 	# Always use this query:
 
 	# cursor.execute(query);
-	PLACEID = "ub16000US3651000" #manhattan
-	query = "SELECT name, ST_ASGeoJSON(geom) FROM " + PLACEID + "WHERE name ~ '" + test_string + "'"
-
+	query = "SELECT fullname, ST_ASGeoJSON(geom) FROM " + placeid + " WHERE fullname ~ '" + test_string + "'"
+	print query
 
 	cursor.execute(query)
 	# retrieve the records from the database
@@ -80,7 +78,7 @@ def is_number(num_or_not):
 # fragment: a string of text that already matches (e.g. "Rd")
 # index: the index of the fragment within text
 # matches: list of matches we already found that we'd like to refine
-def seek_backwards(text, fragment, index, matches):
+def seek_backwards(text, fragment, index, matches, placeid):
 	logger.debug('text | fragment | index | matches %s | %s | %s | %s' % (text,fragment,index,matches))
 	if index == 0:
 		return matches
@@ -94,7 +92,7 @@ def seek_backwards(text, fragment, index, matches):
 	test_string = this_word + ' ' + fragment
 	logger.debug(test_string)
 	# get locations = matches for p + suffix in roads database/name column
-	new_matches = find_in_database(test_string)
+	new_matches = find_in_database(test_string, placeid)
 	logger.debug("testing %s resulted in new matches:" % test_string)
 	logger.debug(new_matches)
 	if len(new_matches) == 0:
@@ -126,7 +124,7 @@ def seek_backwards(text, fragment, index, matches):
 
 		return new_matches
 	else:
-		return seek_backwards(text, test_string, prev_index, new_matches)
+		return seek_backwards(text, test_string, prev_index, new_matches, placeid)
 
 # until end of sentence:
 
@@ -150,7 +148,21 @@ def seek_backwards(text, fragment, index, matches):
 	# 	elsif locations2.length > 1
 
 # matches will be all the sentence fragments ("Alma School Rd", "295 8th Street") which match TIGER-based locations
-def geocode_text(sentence):
+def geocode_text(sentence, placename):
+
+	citynames =  {'nyc':'Manhattan, New York, NY',
+							'sf':'San Francisco, CA',
+							'chicago':'Chicago, IL',
+							'dc':'Washington, DC'}
+
+	CITYNAME=citynames[placename]
+
+	placeids = {'nyc':'ub16000us3651000',
+							'sf':'ub16000us0667000',
+							'chicago':'ub16000us1714000',
+							'dc':'ub16000us1150000'}
+
+	placeid = placeids[placename]
 
 	if 'DEBUG' in os.environ:
 		logger.setLevel(logging.DEBUG)
@@ -166,7 +178,7 @@ def geocode_text(sentence):
 			word = abbr[word]
 		if word in suffixes:
 			logger.info("seeking backwards from " + word + " at index: " + str(i))
-			these_matches = seek_backwards(sentence, word, i, [])
+			these_matches = seek_backwards(sentence, word, i, [], placeid)
 			logger.info(these_matches)
 			if these_matches:
 				all_matches += these_matches
