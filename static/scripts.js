@@ -129,19 +129,16 @@ $(function() {
       placename = "chicago"
     }
     else if (clickedTab == "dc") {
-      $(".input.panel").hide();
-      $(".found.panel").show();
-      //$(".wtf.panel").hide();
+      map.panTo(new L.LatLng(38.9041, -77.0171)); //dc GeoPosition[{38.9041, -77.0171}] nyc GeoPosition[{40.7283, -73.9942}] sf GeoPosition[{37.7599, -122.437}]
+      placename = "dc"
     }
     else if (clickedTab == "nyc") {
-      $(".input.panel").hide();
-      $(".found.panel").hide();
-     //$(".wtf.panel").show();
+      map.panTo(new L.LatLng(40.7283, -73.9942)); //dc GeoPosition[{38.9041, -77.0171}] nyc GeoPosition[{40.7283, -73.9942}] sf GeoPosition[{37.7599, -122.437}]
+      placename = "nyc"
     }
     else if (clickedTab == "sf") {
-      $(".input.panel").hide();
-      $(".found.panel").hide();
-     //$(".wtf.panel").show();
+      map.panTo(new L.LatLng(37.7599, -122.437)); //dc GeoPosition[{38.9041, -77.0171}] nyc GeoPosition[{40.7283, -73.9942}] sf GeoPosition[{37.7599, -122.437}]
+      placename = "sf"
     }
 
     // Only show active tab
