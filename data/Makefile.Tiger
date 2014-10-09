@@ -27,6 +27,7 @@ tables: db_roads db_roadnames db_boundaries db_group_union
 
 #pg_dump -Fc --no-acl --no-owner -h localhost tiger > tiger.dump
 #HEROKU_POSTGRESQL_MAGENTA
+#NOTE: THE FOLLOWING WILL DROP YOUR DATABASE IF IT ALREADY EXISTS
 database_push: database
 	 heroku pg:reset --confirm findlines-staging DATABASE_URL
 	 heroku pg:push tiger DATABASE_URL --app findlines-staging
