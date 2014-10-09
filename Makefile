@@ -34,3 +34,11 @@ find_place_id:
 find_tiger_line_id:
 	curl -G -v "http://api.censusreporter.org/1.0/geo/tiger2012/${PLACEID}/parents"
 	@printf "\n the last 5 digits of the GEOID field \n at level 50 or, the county, are the tiger line id \n pass these as an argument \n e.g. make tables TIGERID=\"36061\" PLACEID=\"16000US3651000\"\n"
+
+sample_cities:
+	make tiger_tables TIGERID="06075" PLACEID="16000US0667000" #san francisco city
+	make tiger_tables TIGERID="11001" PLACEID="16000US1150000" #dc - dc
+	make tiger_tables TIGERID="17031" PLACEID="16000US1714000" #chicago-cook county
+  make tiger_tables TIGERID="36061" PLACEID="16000US3651000" #nyc - manhattan
+	make tiger_tables TIGERID="41051" PLACEID="16000US4159000" #portland - multinomah county
+	make tiger_tables TIGERID="48113" PLACEID="16000US4819000" #dallas - dallas county
