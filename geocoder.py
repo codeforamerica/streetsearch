@@ -162,7 +162,7 @@ def geocode_text(sentence, placename):
 							'sf':'ub16000us0667000',
 							'chicago':'ub16000us1714000',
 							'dc':'ub16000us1150000',
-							'portland':'portland'}
+							'portland':'ug_portland'}
 
 	placeid = placeids[placename]
 
