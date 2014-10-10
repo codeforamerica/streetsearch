@@ -140,10 +140,14 @@ $(function() {
       map.panTo(new L.LatLng(37.7599, -122.437)); //dc GeoPosition[{38.9041, -77.0171}] nyc GeoPosition[{40.7283, -73.9942}] sf GeoPosition[{37.7599, -122.437}]
       placename = "sf"
     }
+    else if (clickedTab == "portland") {
+      map.panTo(new L.LatLng(37.7599, -122.437)); //dc GeoPosition[{38.9041, -77.0171}] nyc GeoPosition[{40.7283, -73.9942}] sf GeoPosition[{37.7599, -122.437}]
+      placename = "portland"
+    }
 
     // Only show active tab
-    $('.pure-menu-selected').removeClass('pure-menu-selected');
-    target.parent("li").toggleClass('pure-menu-selected');
+    $('.pure-menu-selected-cities').removeClass('pure-menu-selected-cities');
+    target.parent("li").toggleClass('pure-menu-selected-cities');
   });
 
   // Export as GeoJSON
