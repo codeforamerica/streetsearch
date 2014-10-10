@@ -49,7 +49,7 @@ def find_in_database(test_string, placeid):
 	# Always use this query:
 
 	# cursor.execute(query);
-	query = "SELECT name, ST_ASGeoJSON(geom) FROM " + placeid + " WHERE name ~ '^(.* )*" + test_string + "'"
+	query = "SELECT fullname, ST_ASGeoJSON(geom) FROM " + placeid + " WHERE fullname ~ '^(.* )*" + test_string + "'"
 	print query
 
 	cursor.execute(query)
