@@ -49,7 +49,7 @@ def find_in_database(test_string, placeid):
 	# Always use this query:
 
 	# cursor.execute(query);
-	query = "SELECT fullname, ST_ASGeoJSON(geom) FROM " + placeid + " WHERE fullname ~ '" + test_string + "'"
+	query = "SELECT fullname, ST_ASGeoJSON(geom) FROM " + placeid + " WHERE fullname LIKE '" + test_string + "'"
 	print query
 
 	cursor.execute(query)
@@ -84,6 +84,13 @@ def seek_backwards(text, fragment, index, matches, placeid):
 		return matches
 	prev_index = index - 1
 
+	citynames =  {'ub16000us3651000':'Manhattan, New York, NY',
+							'ub16000us0667000':'San Francisco, CA',
+							'ub16000us1714000':'Chicago, IL',
+							'ub16000us1150000':'Washington, DC'}
+
+	cityname=citynames[placeid]
+
 	this_word = text[prev_index]
 	logger.debug(this_word)
 	if this_word in prefix.keys():
@@ -104,7 +111,7 @@ def seek_backwards(text, fragment, index, matches, placeid):
 			if is_number(maybe_address_number):
 				maybe_address = maybe_address_number + ' ' + test_string
 				logger.debug('Address to Geocode (TODO): %s' % maybe_address)
-				results = Geocoder.geocode(maybe_address + CITYNAME)
+				results = Geocoder.geocode(maybe_address + cityname)
 				logger.debug('Geocoder returned this location:')
 				logger.debug(results[0].coordinates)
 
@@ -149,13 +156,6 @@ def seek_backwards(text, fragment, index, matches, placeid):
 
 # matches will be all the sentence fragments ("Alma School Rd", "295 8th Street") which match TIGER-based locations
 def geocode_text(sentence, placename):
-
-	citynames =  {'nyc':'Manhattan, New York, NY',
-							'sf':'San Francisco, CA',
-							'chicago':'Chicago, IL',
-							'dc':'Washington, DC'}
-
-	CITYNAME=citynames[placename]
 
 	placeids = {'nyc':'ub16000us3651000',
 							'sf':'ub16000us0667000',
