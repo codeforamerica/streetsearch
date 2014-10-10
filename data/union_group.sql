@@ -1,3 +1,4 @@
+-- creates a view with road names and geometries
 CREATE VIEW namedroads
   AS SELECT roadnames.predirabrv as prefix,
   roadnames.suftypabrv as suffix,
@@ -6,7 +7,8 @@ CREATE VIEW namedroads
   roads.geom
   FROM nameid as roadnames, edgeid as roads
   WHERE roadnames.tlid = roads.tlid;
---
+
+--creates a view with road names and geometries within city boundaries
 CREATE VIEW roadswithin
   AS SELECT fullname, namedroads.geom
   FROM placetableid as boundaries, namedroads
