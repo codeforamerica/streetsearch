@@ -42,3 +42,7 @@ sample_cities:
 	make tiger_tables TIGERID="36061" PLACEID="16000US3651000" #nyc - manhattan
 	make tiger_tables TIGERID="41051" PLACEID="16000US4159000" #portland - multinomah county
 	make tiger_tables TIGERID="48113" PLACEID="16000US4819000" #dallas - dallas county
+
+push_table_heroku:
+	pg_dump tiger -f ${TABLENAME}.sql --table TABLENAME
+	cat ${TABLENAME}.sql | heroku pg:psql --app findlines-staging
