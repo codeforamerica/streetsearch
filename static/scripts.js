@@ -4,7 +4,7 @@ var lg = {};
 // nyc = [40.7210,-73.9823]
 var localized_latlong = [40.7210,-73.9823]
 
-var placename = ""
+var placename = "nyc"
 
 var map = L.map('map').setView(localized_latlong, 11);
 L.tileLayer('http://{s}.tiles.mapbox.com/v3/ardouglass.h3mingmm/{z}/{x}/{y}.png', {
