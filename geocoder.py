@@ -49,7 +49,7 @@ def find_in_database(test_string, placeid):
 	# Always use this query:
 
 	# cursor.execute(query);
-	query = "SELECT fullname, ST_ASGeoJSON(geom) FROM " + placeid + " WHERE fullname ~ '^(.* )*" + test_string + "$'"
+	query = "SELECT name, ST_ASGeoJSON(geom) FROM " + placeid + " WHERE name ~ '^(.* )*" + test_string + "'"
 	print query
 
 	cursor.execute(query)
@@ -87,7 +87,8 @@ def seek_backwards(text, fragment, index, matches, placeid):
 	citynames =  {'ub16000us3651000':'Manhattan, New York, NY',
 							'ub16000us0667000':'San Francisco, CA',
 							'ub16000us1714000':'Chicago, IL',
-							'ub16000us1150000':'Washington, DC'}
+							'ub16000us1150000':'Washington, DC',
+							'portland':'portland'}
 
 	cityname=citynames[placeid]
 
@@ -160,7 +161,8 @@ def geocode_text(sentence, placename):
 	placeids = {'nyc':'ub16000us3651000',
 							'sf':'ub16000us0667000',
 							'chicago':'ub16000us1714000',
-							'dc':'ub16000us1150000'}
+							'dc':'ub16000us1150000',
+							'portland':'portland'}
 
 	placeid = placeids[placename]
 
