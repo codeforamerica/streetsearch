@@ -67,13 +67,6 @@ html, button, input, select, textarea,
   color: #000;
 }
 
-.pure-menu .pure-menu-selected-cities a,
-.pure-menu .pure-menu-selected-cities a:hover,
-.pure-menu .pure-menu-selected-cities a:focus {
-  background-color: #fff;
-  color: #000;
-}
-
 .panels .panel {
   padding: 1em;
   line-height: 1.5;

@@ -114,7 +114,7 @@ $(function() {
     }
 
     // Only show active tab
-    $('.pure-menu-selected').removeClass('pure-menu-selected');
+    $('.tabs .pure-menu-selected').removeClass('pure-menu-selected');
     target.parent("li").toggleClass('pure-menu-selected');
   });
 
@@ -146,8 +146,8 @@ $(function() {
     }
 
     // Only show active tab
-    $('.pure-menu-selected-cities').removeClass('pure-menu-selected-cities');
-    target.parent("li").toggleClass('pure-menu-selected-cities');
+    $('.cities .pure-menu-selected').removeClass('pure-menu-selected');
+    target.parent("li").toggleClass('pure-menu-selected');
   });
 
   // Export as GeoJSON
