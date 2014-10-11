@@ -1,0 +1,21 @@
+DB = -d tiger
+CITYNAME = "dallas"
+
+tables:  db_lines db_group_union
+
+db_group_union:
+	cat data/union_group_metro.sql | sed -e "s/placename/${CITYNAME}/" | psql $(DB) -a
+
+lines/${CITYNAME}.osm2pgsql-shapefiles.zip:
+	wget -P lines/ http://osm-extracted-metros.s3.amazonaws.com/${CITYNAME}.osm2pgsql-shapefiles.zip
+
+lines/${CITYNAME}-osm-line.shp: lines/${CITYNAME}.osm2pgsql-shapefiles.zip
+	unzip -d lines/ lines/${CITYNAME}.osm2pgsql-shapefiles.zip
+
+lines/${CITYNAME}.sql: lines/${CITYNAME}-osm-line.shp
+	ogr2ogr -f "ESRI Shapefile" -dialect SQLite -sql "SELECT name FROM '${CITYNAME}.osm-line'" lines/${CITYNAME}.shp lines/${CITYNAME}.osm-line.shp -lco ENCODING=UTF-8
+	mv lines/${CITYNAME}.dbf lines/${CITYNAME}.osm-line.dbf
+	shp2pgsql -D -W "LATIN1" -s 4326 lines/${CITYNAME}.osm-line.shp ${CITYNAME} > lines/${CITYNAME}.sql
+
+db_lines: lines/${CITYNAME}.sql
+	psql $(DB) -q -f lines/${CITYNAME}.sql

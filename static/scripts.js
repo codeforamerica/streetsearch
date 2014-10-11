@@ -1,15 +1,21 @@
 var lg = {};
 
-var map = L.map('map').setView([33.4150, -111.8314], 11);
+// mesa latlong = [33.4150, -111.8314]
+// nyc = [40.7210,-73.9823]
+var localized_latlong = [40.7210,-73.9823]
+
+var placename = "nyc"
+
+var map = L.map('map').setView(localized_latlong, 11);
 L.tileLayer('http://{s}.tiles.mapbox.com/v3/ardouglass.h3mingmm/{z}/{x}/{y}.png', {
     maxZoom: 18
 }).addTo(map);
 
-function geocodeText(text) {
+function geocodeText(text, placename) {
    $.ajax({
     type: 'POST',
     url: '/',
-    data: { fileupload: text},
+    data: { sentence: text, placename: placename},
     dataType: 'json',
     success: populateMap
   });
@@ -78,7 +84,7 @@ $(function() {
     $("#found-roads").empty();
 
     // send off the text for geocoding
-    geocodeText($("#geotext").val());
+    geocodeText($("#geotext").val(),placename);
 
     // Let users know something is happening
     $("#geocode").text("Hold up. Processing.").css("background-color", "#ef1818");
@@ -108,7 +114,42 @@ $(function() {
     }
 
     // Only show active tab
-    $('.pure-menu-selected').removeClass('pure-menu-selected');
+    $('.tabs .pure-menu-selected').removeClass('pure-menu-selected');
+    target.parent("li").toggleClass('pure-menu-selected');
+  });
+
+  $(".cities").click(function(e) {
+    e.preventDefault();
+
+    var target = $(e.target);
+    var clickedTab = target.data("tab");
+
+    if (clickedTab == "chicago") {
+      map.panTo(new L.LatLng(41.8376, -87.6818)); //dc GeoPosition[{38.9041, -77.0171}] nyc GeoPosition[{40.7283, -73.9942}] sf GeoPosition[{37.7599, -122.437}]
+      placename = "chicago"
+    }
+    else if (clickedTab == "dc") {
+      map.panTo(new L.LatLng(38.9041, -77.0171)); //dc GeoPosition[{38.9041, -77.0171}] nyc GeoPosition[{40.7283, -73.9942}] sf GeoPosition[{37.7599, -122.437}]
+      placename = "dc"
+    }
+    else if (clickedTab == "nyc") {
+      map.panTo(new L.LatLng(40.7283, -73.9942)); //dc GeoPosition[{38.9041, -77.0171}] nyc GeoPosition[{40.7283, -73.9942}] sf GeoPosition[{37.7599, -122.437}]
+      placename = "nyc"
+    }
+    else if (clickedTab == "sf") {
+      map.panTo(new L.LatLng(37.7599, -122.437)); //dc GeoPosition[{38.9041, -77.0171}] nyc GeoPosition[{40.7283, -73.9942}] sf GeoPosition[{37.7599, -122.437}]
+      placename = "sf"
+    }
+    else if (clickedTab == "portland") {
+      map.panTo(new L.LatLng(45.537, -122.65)); //portland GeoPosition[{45.537, -122.65}] dc GeoPosition[{38.9041, -77.0171}] nyc GeoPosition[{40.7283, -73.9942}] sf GeoPosition[{37.7599, -122.437}]
+      placename = "portland"
+    }
+    else if (clickedTab == "dallas") {
+      map.panTo(new L.LatLng(32.7942, -96.7655)); //dallas: GeoPosition[{32.7942, -96.7655}] portland GeoPosition[{45.537, -122.65}] dc GeoPosition[{38.9041, -77.0171}] nyc GeoPosition[{40.7283, -73.9942}] sf GeoPosition[{37.7599, -122.437}]
+      placename = "dallas"
+    }
+    // Only show active tab
+    $('.cities .pure-menu-selected').removeClass('pure-menu-selected');
     target.parent("li").toggleClass('pure-menu-selected');
   });
 

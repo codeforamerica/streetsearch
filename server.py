@@ -12,8 +12,9 @@ def index():
 		return app.send_static_file('index.html')
 
 	if request.method=='POST':
-		sentence = request.form['fileupload']
-		return jsonify(text=geocode_text(sentence))
+		sentence = request.form['sentence']
+		placename = request.form['placename']
+		return jsonify(text=geocode_text(sentence,placename))
 
 if __name__ == "__main__":
     app.run()

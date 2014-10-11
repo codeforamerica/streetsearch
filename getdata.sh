@@ -45,3 +45,7 @@ http://api.censusreporter.org/1.0/geo/tiger2012/16000US3651000?geom=true
 
 #search for geo id for name
 http://api.censusreporter.org/1.0/geo/search?q=New%20York&sumlevs=010,020,030,040,050,060,160,250,310,500,610,620,860,950,960,970
+
+#get geo-id of parent
+http://api.censusreporter.org/1.0/geo/tiger2012/16000US3651000/parents
+#we can use this to look up the tiger line id used to fetch road geometries by slicing the last 6 or so digits off of the geoid field at level 50 or, the county
