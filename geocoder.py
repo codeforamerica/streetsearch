@@ -88,7 +88,7 @@ def seek_backwards(text, fragment, index, matches, placeid):
 							'ub16000us0667000':'San Francisco, CA',
 							'ub16000us1714000':'Chicago, IL',
 							'ub16000us1150000':'Washington, DC',
-							'portland':'portland'}
+							'ug_portland':'ug_portland'}
 
 	cityname=citynames[placeid]
 
