@@ -89,7 +89,8 @@ def seek_backwards(text, fragment, index, matches, placeid):
 							'ub16000us1714000':'Chicago, IL',
 							'ub16000us1150000':'Washington, DC',
 							'ug_portland':'ug_portland',
-							'ub16000us4819000':'dallas'}
+							'ub16000us4819000':'dallas',
+							'16000US0446000':'mesa'}
 
 	cityname=citynames[placeid]
 
@@ -164,7 +165,8 @@ def geocode_text(sentence, placename):
 							'chicago':'ub16000us1714000',
 							'dc':'ub16000us1150000',
 							'portland':'ug_portland',
-							'dallas':'ub16000us4819000'}
+							'dallas':'ub16000us4819000',
+							'mesa':'16000US0446000'}
 
 	placeid = placeids[placename]
 
