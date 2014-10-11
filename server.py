@@ -2,7 +2,6 @@ from flask import Flask, render_template, request, url_for, jsonify
 from geocoder import *
 
 app = Flask(__name__, static_url_path='')
-app.config.from_pyfile('config.py')
 app.debug = True
 
 @app.route('/', methods=['GET','POST'])
