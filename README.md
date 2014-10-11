@@ -7,12 +7,14 @@ It works by finding things in your text that look like they might be streets (su
 
 # TODO:
 
-Currently this only works in Mesa, AZ (because our street data from the Census Bureau is currently only in that area). It shouldn't be hard to make this work for other places. Pull requests welcome.
-
+Would you like to see your city in here? Please post in the "issues" section.
 
 # Setup:
 
-1. Run `make` in the data directory to build the database of local roads. If you want this to work outside of Mesa, set the Makefile's PLACEID to the correct ID for your place of interest in the Census Reporter (http://censusreporter.org).
+1. Run `make database` in the root directory to build the database of local roads. This currently defaults to setting up manhattan. Set the Makefile's PLACEID to the correct ID for your place of interest in the Census Reporter (http://censusreporter.org).
+
+  You can use TIGER, like so: make tiger_tables TIGERID="06075" PLACEID="16000US0667000" #san francisco city
+  Or you can use Metro-Extracts like so: make metro_tables
 
 2. If on Heroku, you can run `make database_push` to push to your heroku app.
 Note that to use PostGIS extension, you'll need to get a premium level heroku postgres addon.
@@ -22,6 +24,21 @@ Note that to use PostGIS extension, you'll need to get a premium level heroku po
 You then will want to promote the premium database to be accessed through heroku's DATABASE_URL environment variable.
 
     heroku pg:promote HEROKU_POSTGRESQL_YELLOW_URL
+
+You can also push locally made tables to heroku:
+
+push_table_heroku TABLENAME="portland"
+
+#Table Naming schema
+
+during the make process, several tables will be created.
+
+If you use Tiger, tables named after the Tiger ID preceded by n are street names
+Those preceded by e are edges.
+
+The table preceded by 'b' with a PLACEID is the boundary for your selected city.
+
+The table ub(PLACEID) is the road table that is used for the main search.
 
 # Usage:
 
@@ -47,4 +64,3 @@ Run the following command to POST some example text to the server.
 	make run_test
 
 I'd recommend using the Chrome extension 'Postman' for further testing. You'll need to pass some form data such that 'fileupload' is the key and your free form text containing addresses is the value.
-
