@@ -2,7 +2,6 @@
 #PSQL = psql $(DB)
 # DB = heroku pg:psql
 DB = -d tiger
-HEROKU = postgres://qllufmrlpjjoom:QUrv1bd2dEn6wU5SFipP7EL5xB@ec2-54-225-103-9.compute-1.amazonaws.com:5432/d584tj8u3bfgga
 
 #tiger line census name
 #NYC = 36061

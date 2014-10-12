@@ -45,4 +45,4 @@ sample_cities:
 
 push_table_heroku:
 	pg_dump tiger -f ${TABLENAME}.sql --table ${TABLENAME}
-	cat ${TABLENAME}.sql | heroku pg:psql --app findlines-staging
+	cat ${TABLENAME}.sql | heroku pg:psql --app ${APPNAME}
