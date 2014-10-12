@@ -99,4 +99,4 @@ Run the following command to POST some example text to the server.
 
 	 $ make run_test
 
-I'd recommend using the Chrome extension 'Postman' for further testing. You'll need to pass some form data such that 'fileupload' is the key and your free form text containing addresses is the value.
+I'd recommend using the Chrome extension 'Postman' for further testing. You'll need to pass some form data such that 'sentence' is a key and your free form text containing addresses is the corresponding value, while 'placename' is a key and the value is "nyc", "mesa", "sf", or one of the other values expected by the geocode_text method in geocoder.py.
