@@ -102,13 +102,13 @@ def seek_backwards(text, fragment, index, matches, placeid):
 	test_string = this_word + ' ' + fragment
 	logger.debug(test_string)
 	# get locations = matches for p + suffix in roads database/name column
-	new_matches = [find_in_database(test_string, placeid), index]
+	new_matches = find_in_database(test_string, placeid)
 	logger.debug("testing %s resulted in new matches:" % test_string)
-	logger.debug(new_matches[0])
-	if len(new_matches[0]) == 0:
+	logger.debug(new_matches)
+	if len(new_matches) == 0:
 		logger.debug("no new matches based on '%s', returning former matches" % this_word)
 		return matches # stick w/ old results
-	elif len(new_matches[0]) == 1:
+	elif len(new_matches) == 1:
 		if prev_index > 0: # start looking for address to geocode
 			maybe_address_number = text[prev_index-1]
 			if is_number(maybe_address_number):
@@ -134,7 +134,7 @@ def seek_backwards(text, fragment, index, matches, placeid):
 
 		return new_matches
 	else:
-		return seek_backwards(text, test_string, prev_index, new_matches[0], placeid)
+		return seek_backwards(text, test_string, prev_index, new_matches, placeid)
 
 # until end of sentence:
 
@@ -166,7 +166,7 @@ def geocode_text(sentence, placename):
 							'dc':'ub16000us1150000',
 							'portland':'ug_portland',
 							'dallas':'ub16000us4819000',
-							'mesa':'16000US0446000'}
+							'mesa':'ub16000US0446000'}
 
 	placeid = placeids[placename]
 
@@ -187,7 +187,7 @@ def geocode_text(sentence, placename):
 			these_matches = seek_backwards(sentence, word, i, [], placeid)
 			logger.info(these_matches)
 			if these_matches:
-				all_matches += list(zip(*these_matches)[0])
+				all_matches += these_matches
 
 	logger.info(all_matches)
 	return all_matches
