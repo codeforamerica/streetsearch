@@ -161,12 +161,12 @@ def seek_backwards(text, fragment, index, matches, placeid):
 def geocode_text(sentence, placename):
 
 	placeids = {'nyc':'ub16000us3651000',
-							'sf':'ub16000us0667000',
-							'chicago':'ub16000us1714000',
-							'dc':'ub16000us1150000',
-							'portland':'ug_portland',
-							'dallas':'ub16000us4819000',
-							'mesa':'ub16000US0446000'}
+				'sf':'ub16000us0667000',
+				'chicago':'ub16000us1714000',
+				'dc':'ub16000us1150000',
+				'portland':'ug_portland',
+				'dallas':'ub16000us4819000',
+				'mesa':'ub16000US0446000'}
 
 	placeid = placeids[placename]
 
