@@ -12,3 +12,9 @@ venv
 roads.sql
 roadnames.sql
 mesa_boundaries.sql
+
+names
+edges
+boundaries
+
+
