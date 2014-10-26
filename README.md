@@ -9,7 +9,7 @@ Given some free form text, this tool finds geographic entities (lines, points) i
 
 It works by finding things in your text that look like they might be streets (substrings in the text ending in words like 'Road' or 'Street') and comparing them to actual streetnames from a TIGER database for a specific area (e.g. Mesa, Arizona).
 
-![Demo of StreetSearch](http://cdn.makeagif.com/media/10-26-2014/NE0Vm5.gif)
+![Demo of StreetSearch](http://cdn.makeagif.com/media/10-26-2014/ClIR0z.gif)
 
 # TODO:
 
