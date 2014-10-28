@@ -6,6 +6,10 @@ TEST_PLACENAME = nyc
 SERVER = localhost
 PORT = 5000
 
+# Uncomment the next two lines if you just want to run `make run_test` to test the online server.
+# SERVER = http://www.streetsear.ch
+# PORT = 80
+
 run_server:
 	python server.py
 

@@ -14,7 +14,7 @@ L.tileLayer('http://{s}.tiles.mapbox.com/v3/ardouglass.h3mingmm/{z}/{x}/{y}.png'
 function geocodeText(text, placename) {
    $.ajax({
     type: 'POST',
-    url: '/',
+    url: '/', // set URL to http://www.streetsear.ch/ if you want to test against the server
     data: { sentence: text, placename: placename},
     dataType: 'json',
     success: populateMap
