@@ -15,7 +15,7 @@ It works by finding things in your text that look like they might be streets (su
 
 # TODO:
 
-Would you like to see your city in here? Please post in the "issues" section.
+Would you like to see your city in here? Please [let us know](https://github.com/codeforamerica/streetsearch/issues/new).
 
 # Setup:
 
