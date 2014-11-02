@@ -1,5 +1,7 @@
 
-# About:
+# StreetSearch [![Code Climate](https://codeclimate.com/github/codeforamerica/streetsearch/badges/gpa.svg)][codeclimate]
+
+[codeclimate]: https://codeclimate.com/github/codeforamerica/streetsearch
 
 We made this as a service for a fellowship project in Mesa, AZ. Because it is based on US Government TIGER data, it might be easy to use for projects in other places. We've set up a few of them as examples.
 
