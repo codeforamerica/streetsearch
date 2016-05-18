@@ -3,7 +3,7 @@
 
 [codeclimate]: https://codeclimate.com/github/codeforamerica/streetsearch
 
-We made this as a service for a fellowship project in Mesa, Arizona, to solve the problem of finding locations mentioned inside unstructured text ("Let's eat at Republic Empanada at **204 E 1st Ave**, ok?" or "The city's **Main Street** lightrail extension will be done in 2015.") Because it is based on US Government TIGER data, it might be easy to use for projects in other places. We've set up a few of them as examples at [streetsear.ch](http://streetsear.ch).
+We made this as a service for a fellowship project in Mesa, Arizona, to solve the problem of finding locations mentioned inside unstructured text ("Let's eat at Republic Empanada at **204 E 1st Ave**, ok?" or "The city's **Main Street** lightrail extension will be done in 2015.") Because it is based on US Government TIGER data, it might be easy to use for projects in other places. 
 
 # What it does:
 
